@@ -307,13 +307,14 @@ summary:focus-visible {
 
 @media (min-width: 1100px) {
     .layout {
-        grid-template-columns: minmax(0, 1fr) var(--toc) minmax(0, var(--measure)) var(--toc) minmax(0, 1fr);
+        grid-template-columns: var(--toc) minmax(0, var(--measure));
+        justify-content: center;
         column-gap: 40px;
     }
 
     .toc {
         display: block;
-        grid-column: 2;
+        grid-column: 1;
         position: sticky;
         top: calc(var(--bar-h) + 28px);
         align-self: start;
@@ -334,8 +335,15 @@ summary:focus-visible {
     }
 
     .post-body {
-        grid-column: 3;
+        grid-column: 2;
         margin: 0;
+    }
+}
+
+/* With room to spare, an empty column the width of the contents keeps the text centred. */
+@media (min-width: 1360px) {
+    .layout {
+        grid-template-columns: var(--toc) minmax(0, var(--measure)) var(--toc);
     }
 }
 
@@ -396,7 +404,7 @@ summary:focus-visible {
 /* A figure or table that may grow past the text column, up to the frame width */
 @media (min-width: 1100px) {
     .post-body .wide {
-        width: min(var(--frame), calc(100vw - 2 * var(--toc) - 4 * var(--gutter)));
+        width: min(var(--frame), calc(100vw - var(--toc) - 4 * var(--gutter)));
         max-width: none;
         margin-left: 50%;
         transform: translateX(-50%);

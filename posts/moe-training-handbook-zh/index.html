@@ -32,14 +32,33 @@
         };
       })();
     </script><script type="module" src="scripts/color-palettes.js"></script><script src="viz-fit.js"></script><link rel="stylesheet" href="_astro/index.ovIZp0KM.css"><script type="module" src="_astro/hoisted.I-IGyRaV.js"></script>
-<script type="module" src="_astro/page.DyOpxeYA.js"></script><link rel="icon" href="data:image/svg+xml, <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☯️</text></svg>"></head> <body> <style>
-.blog-topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px max(24px,calc((100% - 948px)/2));font-size:.9rem;font-weight:600;border-bottom:1px solid var(--border-color)}
-.blog-topbar a{color:var(--text-color);text-decoration:none}
-.blog-topbar a.home{color:var(--muted-color)}
-.blog-topbar a:hover{color:var(--primary-color)}
-@media (min-width:1101px){.blog-topbar{min-height:88px}}
-@media print{.blog-topbar{display:none}}
-</style> <nav class="blog-topbar" aria-label="Site"><a href="../../">Senkang Forest Hu · Blog</a><a class="home" href="../../">&larr; All posts</a></nav> <button id="theme-toggle" aria-label="切换配色主题" data-astro-cid-x3pjskd3> <span class="icon-wrapper" data-astro-cid-x3pjskd3> <svg class="icon icon--sun" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-x3pjskd3> <circle cx="12" cy="12" r="5" data-astro-cid-x3pjskd3></circle> <line x1="12" y1="1" x2="12" y2="4" data-astro-cid-x3pjskd3></line> <line x1="12" y1="20" x2="12" y2="23" data-astro-cid-x3pjskd3></line> <line x1="1" y1="12" x2="4" y2="12" data-astro-cid-x3pjskd3></line> <line x1="20" y1="12" x2="23" y2="12" data-astro-cid-x3pjskd3></line> <line x1="4.22" y1="4.22" x2="6.34" y2="6.34" data-astro-cid-x3pjskd3></line> <line x1="17.66" y1="17.66" x2="19.78" y2="19.78" data-astro-cid-x3pjskd3></line> <line x1="4.22" y1="19.78" x2="6.34" y2="17.66" data-astro-cid-x3pjskd3></line> <line x1="17.66" y1="6.34" x2="19.78" y2="4.22" data-astro-cid-x3pjskd3></line> </svg> <svg class="icon icon--moon" style="opacity:0" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-x3pjskd3> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-astro-cid-x3pjskd3></path> </svg> </span>  </button>  <section class="hero" data-astro-cid-uzw5or4x> <h1 class="hero-title" data-astro-cid-uzw5or4x>MoE 训练终极手册</h1> <p class="hero-desc" data-astro-cid-uzw5or4x>如何大规模训练 Mixture-of-Experts 模型：一项一项设定，以及支撑每个选择的实验</p> <figure class="html-embed" id="banner"><div class="html-embed__card is-frameless"><div id="frag-o6vuzc33sgt"><div class="moe-headline" id="banner">
+<script type="module" src="_astro/page.DyOpxeYA.js"></script><link rel="icon" href="data:image/svg+xml, <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☯️</text></svg>"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet"><link rel="stylesheet" href="../../assets/post.css"><style id="moe-template-overrides">
+/* This post keeps its original article markup and scripts inside the blog's post template. */
+#theme-toggle{display:none!important}
+.hero .hero-figure{margin-top:8px}
+.meta a{color:inherit}
+.meta a:hover{color:var(--accent)}
+.post-footer{margin-top:0}
+section.content-grid{max-width:none;padding:40px var(--gutter) 16px}
+section.content-grid .table-of-contents{top:calc(var(--bar-h) + 28px);margin-top:0;max-height:calc(100vh - var(--bar-h) - 56px);overflow-y:auto}
+@media (min-width:1100px){
+  section.content-grid{display:grid;grid-template-columns:var(--toc) minmax(0,var(--measure));justify-content:center;column-gap:40px}
+  section.content-grid>.table-of-contents{grid-column:1}
+  section.content-grid>main{grid-column:2;min-width:0}
+}
+@media (max-width:1359px){
+  /* no right column here, so margin notes sit in the text as they do on phones */
+  .content-grid main span.sn{float:none;display:block;width:auto;margin:6px 0 6px 12px}
+}
+@media (min-width:1100px) and (max-width:1359px){
+  /* the text column sits 130px right of centre here: centre wide figures on the page instead */
+  .content-grid main figure.viz{left:calc(50% - (var(--toc) + 40px) / 2)}
+}
+@media (min-width:1360px){
+  section.content-grid{grid-template-columns:var(--toc) minmax(0,var(--measure)) var(--toc)}
+  .content-grid main span.sn{width:var(--toc);margin-right:calc(-1 * var(--toc) - 40px)}
+}
+</style></head> <body> <nav class="topbar frame" aria-label="Site"><a href="../../"><span class="brand-name">Senkang Forest Hu · </span>Blog</a><div class="right"><a class="back" href="../../">&larr; All posts</a><button class="theme-toggle" type="button" aria-label="切换配色主题"><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"></path></svg><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button></div><div class="progress" aria-hidden="true"></div></nav> <button id="theme-toggle" aria-label="切换配色主题" data-astro-cid-x3pjskd3> <span class="icon-wrapper" data-astro-cid-x3pjskd3> <svg class="icon icon--sun" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-x3pjskd3> <circle cx="12" cy="12" r="5" data-astro-cid-x3pjskd3></circle> <line x1="12" y1="1" x2="12" y2="4" data-astro-cid-x3pjskd3></line> <line x1="12" y1="20" x2="12" y2="23" data-astro-cid-x3pjskd3></line> <line x1="1" y1="12" x2="4" y2="12" data-astro-cid-x3pjskd3></line> <line x1="20" y1="12" x2="23" y2="12" data-astro-cid-x3pjskd3></line> <line x1="4.22" y1="4.22" x2="6.34" y2="6.34" data-astro-cid-x3pjskd3></line> <line x1="17.66" y1="17.66" x2="19.78" y2="19.78" data-astro-cid-x3pjskd3></line> <line x1="4.22" y1="19.78" x2="6.34" y2="17.66" data-astro-cid-x3pjskd3></line> <line x1="17.66" y1="6.34" x2="19.78" y2="4.22" data-astro-cid-x3pjskd3></line> </svg> <svg class="icon icon--moon" style="opacity:0" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-x3pjskd3> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-astro-cid-x3pjskd3></path> </svg> </span>  </button>  <header class="hero frame"> <div class="category">LLM Training</div> <h1 class="hero-title">MoE 训练终极手册</h1> <p class="lede">如何大规模训练 Mixture-of-Experts 模型：一项一项设定，以及支撑每个选择的实验</p> <div class="hero-figure"><figure class="html-embed" id="banner"><div class="html-embed__card is-frameless"><div id="frag-o6vuzc33sgt"><div class="moe-headline" id="banner">
   <iframe title="The Ultimate MoE Training Handbook: one training step on 1,024 GPUs" scrolling="no"></iframe>
 </div>
 <style>
@@ -67,7 +86,7 @@
     f.style.height = d.h + "px";
   });
 </script>
-</div></div></figure> </section> <script>
+</div></div></figure> </div> </header> <script>
   (() => {
     const el = document.querySelector(".hero-title");
     if (!el) return;
@@ -75,7 +94,7 @@
     if (len > 100) el.dataset.titleSize = "sm";
     else if (len > 60) el.dataset.titleSize = "md";
   })();
-</script> <header class="meta" aria-label="文章元信息" data-astro-cid-uzw5or4x> <div class="meta-container" data-astro-cid-uzw5or4x> <div class="meta-container-cell" data-astro-cid-uzw5or4x> <h3 data-astro-cid-uzw5or4x>作者</h3> <ul class="authors" data-astro-cid-uzw5or4x> <li data-astro-cid-uzw5or4x> <a href="https://huggingface.co/nouamanetazi" data-astro-cid-uzw5or4x>Nouamane Tazi</a><span data-astro-cid-uzw5or4x>, </span> </li><li data-astro-cid-uzw5or4x> <a href="https://huggingface.co/lvwerra" data-astro-cid-uzw5or4x>Leandro von Werra</a><span data-astro-cid-uzw5or4x>, </span> </li><li data-astro-cid-uzw5or4x> <a href="https://huggingface.co/thomwolf" data-astro-cid-uzw5or4x>Thomas Wolf</a> </li> </ul> </div> <div class="meta-container-cell meta-container-cell--affiliations" data-astro-cid-uzw5or4x> <h3 data-astro-cid-uzw5or4x>所属机构</h3> <p data-astro-cid-uzw5or4x> <a href="https://huggingface.co" target="_blank" rel="noopener noreferrer" data-astro-cid-uzw5or4x> Hugging Face </a> </p> </div>  <div class="meta-container-cell meta-container-cell--published" data-astro-cid-uzw5or4x> <h3 data-astro-cid-uzw5or4x>发表时间</h3> <p data-astro-cid-uzw5or4x>2026 年 11 月 5 日</p> </div>   </div> </header>    <section class="content-grid"> <nav class="table-of-contents toc-loading" aria-label="目录" data-auto-collapse="1"> <div class="title">目录</div> <div id="article-toc-placeholder"></div> </nav> <!-- Mobile sidebar --> <button class="toc-mobile-toggle" aria-label="打开目录" aria-expanded="false"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="3" y1="6" x2="21" y2="6"></line> <line x1="3" y1="12" x2="21" y2="12"></line> <line x1="3" y1="18" x2="21" y2="18"></line> </svg> </button> <div class="toc-mobile-backdrop" aria-hidden="true"></div> <aside class="toc-mobile-sidebar toc-loading" aria-label="目录"> <div class="toc-mobile-sidebar__header"> <span class="toc-mobile-sidebar__title">目录</span> <div class="toc-mobile-sidebar__actions"> <button class="toc-mobile-sidebar__theme" aria-label="切换配色主题"> <svg class="icon light" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="4"></line> <line x1="12" y1="20" x2="12" y2="23"></line> <line x1="1" y1="12" x2="4" y2="12"></line> <line x1="20" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"></line> <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"></line> <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"></line> <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"></line> </svg> <svg class="icon dark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button class="toc-mobile-sidebar__close" aria-label="关闭目录"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="18" y1="6" x2="6" y2="18"></line> <line x1="6" y1="6" x2="18" y2="18"></line> </svg> </button> </div> </div> <div class="toc-mobile-sidebar__body" id="article-toc-mobile-placeholder"></div> </aside> <script>
+</script> <div class="meta frame" aria-label="文章元信息"> <dl><dt>作者</dt><dd><a href="https://huggingface.co/nouamanetazi">Nouamane Tazi</a>, <a href="https://huggingface.co/lvwerra">Leandro von Werra</a>, <a href="https://huggingface.co/thomwolf">Thomas Wolf</a></dd></dl> <dl><dt>所属机构</dt><dd><a href="https://huggingface.co" target="_blank" rel="noopener noreferrer">Hugging Face</a></dd></dl> <dl><dt>发表时间</dt><dd>2026 年 11 月 5 日</dd></dl> <dl><dt>主题</dt><dd>LLM Training</dd></dl> </div> <section class="content-grid"> <nav class="table-of-contents toc-loading" aria-label="目录" data-auto-collapse="1"> <div class="title">目录</div> <div id="article-toc-placeholder"></div> </nav> <!-- Mobile sidebar --> <button class="toc-mobile-toggle" aria-label="打开目录" aria-expanded="false"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="3" y1="6" x2="21" y2="6"></line> <line x1="3" y1="12" x2="21" y2="12"></line> <line x1="3" y1="18" x2="21" y2="18"></line> </svg> </button> <div class="toc-mobile-backdrop" aria-hidden="true"></div> <aside class="toc-mobile-sidebar toc-loading" aria-label="目录"> <div class="toc-mobile-sidebar__header"> <span class="toc-mobile-sidebar__title">目录</span> <div class="toc-mobile-sidebar__actions"> <button class="toc-mobile-sidebar__theme" aria-label="切换配色主题"> <svg class="icon light" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="12" r="5"></circle> <line x1="12" y1="1" x2="12" y2="4"></line> <line x1="12" y1="20" x2="12" y2="23"></line> <line x1="1" y1="12" x2="4" y2="12"></line> <line x1="20" y1="12" x2="23" y2="12"></line> <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"></line> <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"></line> <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"></line> <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"></line> </svg> <svg class="icon dark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path> </svg> </button> <button class="toc-mobile-sidebar__close" aria-label="关闭目录"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <line x1="18" y1="6" x2="6" y2="18"></line> <line x1="6" y1="6" x2="18" y2="18"></line> </svg> </button> </div> </div> <div class="toc-mobile-sidebar__body" id="article-toc-mobile-placeholder"></div> </aside> <script>
   // Build TOC from article headings (h2/h3/h4) and render into the sticky aside
   const buildTOC = () => {
     const holder = document.getElementById("article-toc-placeholder");
@@ -2050,4 +2069,19 @@ document.addEventListener('click', async e => {
     // Resize on window changes (e.g., fonts, layout)
     // No textarea auto-resize needed for <pre> blocks
   })();
-</script>    </body> </html>
+</script>    <footer class="post-footer frame"><p class="credit">&copy; Senkang Forest Hu. <a href="../../">Back to all posts</a></p></footer>
+<script>
+(function(){
+  var root=document.documentElement;
+  var btn=document.querySelector('.theme-toggle');
+  if(btn) btn.addEventListener('click',function(){
+    var next=root.dataset.theme==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    try{localStorage.setItem('theme',next);}catch(e){}
+  });
+  var bar=document.querySelector('.progress'),ticking=false;
+  function update(){ticking=false;var max=root.scrollHeight-innerHeight;if(bar)bar.style.width=(max>0?Math.min(100,scrollY/max*100):0)+'%';}
+  addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(update);}},{passive:true});
+  addEventListener('resize',update);update();
+})();
+</script></body> </html>
