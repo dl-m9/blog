@@ -8,6 +8,14 @@
     "link": "posts/moe-training-handbook-zh/"
   },
   {
+    "title": "Multi-Agent Embodied Autonomous Driving (MAEAD): From V2X Information Exchange to Shared World Models",
+    "summary": "A survey of multi-agent embodied autonomous driving, from V2X information exchange to shared world models.",
+    "date": "Sep. 2026",
+    "category": "Multi-Agent Collaboration",
+    "type": "Article",
+    "link": "https://mp.weixin.qq.com/s/Snit_mAvY8AgeNyxxKP-YA"
+  },
+  {
     "title": "SIOP: Self-Induced Outcome Potential",
     "summary": "Verifier-free turn-level credit assignment for long-horizon LLM agents.",
     "date": "May 2026",
