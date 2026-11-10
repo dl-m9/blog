@@ -218,7 +218,7 @@
             <p>Notes, translations and paper write-ups on LLM agents, agentic RL and model training.</p>
         </header>
 
-        <div class="filters" id="filters" role="group" aria-label="Filter posts by type"></div>
+        <div class="filters" id="filters" role="group" aria-label="Filter posts by topic"></div>
 
         <main id="posts" aria-live="polite">
             <noscript>
@@ -247,7 +247,7 @@
 
             function render() {
                 list.textContent = '';
-                const shown = posts.filter(p => active === 'All' || p.type === active);
+                const shown = posts.filter(p => active === 'All' || p.category === active);
                 if (!shown.length) {
                     list.appendChild(el('p', 'empty', 'No posts in this category yet.'));
                     return;
@@ -275,8 +275,8 @@
                     body.appendChild(el('p', '', p.summary));
 
                     const meta = el('div', 'meta');
-                    meta.appendChild(el('span', 'type', p.type));
-                    (p.tags || []).filter(t => t !== p.type).forEach(t => meta.appendChild(el('span', 'tag', t)));
+                    meta.appendChild(el('span', 'type', p.category));
+                    meta.appendChild(el('span', 'tag', p.type));
                     body.appendChild(meta);
 
                     article.appendChild(body);
@@ -285,7 +285,7 @@
             }
 
             function renderFilters() {
-                const types = ['All'].concat([...new Set(posts.map(p => p.type))]);
+                const types = ['All'].concat([...new Set(posts.map(p => p.category))]);
                 filters.textContent = '';
                 types.forEach(t => {
                     const btn = el('button', '', t);

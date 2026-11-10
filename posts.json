@@ -3,86 +3,64 @@
     "title": "The Ultimate MoE Training Handbook",
     "summary": "Simplified Chinese translation of the Hugging Face handbook on training Mixture-of-Experts models, by Nouamane Tazi et al. Shared under CC BY-NC-SA 4.0.",
     "date": "Nov. 2026",
+    "category": "LLM Training",
     "type": "Translation",
-    "link": "posts/moe-training-handbook-zh/",
-    "tags": [
-      "MoE",
-      "LLM Training",
-      "Translation"
-    ]
+    "link": "posts/moe-training-handbook-zh/"
   },
   {
     "title": "SIOP: Self-Induced Outcome Potential",
     "summary": "Verifier-free turn-level credit assignment for long-horizon LLM agents.",
     "date": "May 2026",
+    "category": "Agentic RL",
     "type": "Paper Note",
-    "link": "https://dl-m9.github.io/paper-pages/SIOP/index.html",
-    "tags": [
-      "Agentic RL",
-      "Intelligence"
-    ]
+    "link": "https://dl-m9.github.io/paper-pages/SIOP/index.html"
   },
   {
     "title": "InfoReasoner: Optimizing Agentic Reasoning with Retrieval",
     "summary": "Synthetic semantic information gain rewards for retrieval actions in LLM agentic reasoning.",
     "date": "Apr. 2026",
+    "category": "Agentic RL",
     "type": "Paper Note",
-    "link": "https://dl-m9.github.io/paper-pages/InfoReasoner/index.html",
-    "tags": [
-      "Agentic RL",
-      "Intelligence"
-    ]
+    "link": "https://dl-m9.github.io/paper-pages/InfoReasoner/index.html"
   },
   {
     "title": "SVDecode: Distribution-Aligned Decoding for Efficient LLM Task Adaptation",
     "summary": "Distribution-aligned decoding for efficient LLM task adaptation.",
     "date": "Dec. 2025",
+    "category": "LLM Efficiency",
     "type": "Paper Note",
-    "link": "https://dl-m9.github.io/paper-pages/SVDecode/index.html",
-    "tags": [
-      "LLM Efficiency"
-    ]
+    "link": "https://dl-m9.github.io/paper-pages/SVDecode/index.html"
   },
   {
     "title": "AgentsCoMerge",
     "summary": "Collaborative decision-making for multi-lane merging with LLM-powered agents.",
     "date": "Apr. 2025",
+    "category": "LLM Agents",
     "type": "Article",
-    "link": "https://mp.weixin.qq.com/s/D15TrRp1L_4Mrblg1ZZU-A",
-    "tags": [
-      "LLM Agent",
-      "Intelligence"
-    ]
+    "link": "https://mp.weixin.qq.com/s/D15TrRp1L_4Mrblg1ZZU-A"
   },
   {
     "title": "CP-Guard+: A New Paradigm for Collaborative Perception Security",
     "summary": "Malicious-agent detection and defense for collaborative perception under complex attack settings.",
     "date": "Feb. 2025",
+    "category": "Multi-Agent Trustworthiness",
     "type": "Paper Note",
-    "link": "https://dl-m9.github.io/paper-pages/cpguardp/index.html",
-    "tags": [
-      "Multi-Agent Trustworthiness"
-    ]
+    "link": "https://dl-m9.github.io/paper-pages/cpguardp/index.html"
   },
   {
     "title": "CP-Guard: Malicious Agent Detection and Defense",
     "summary": "Defense for collaborative bird's-eye-view perception against malicious agents.",
     "date": "Dec. 2024",
+    "category": "Multi-Agent Trustworthiness",
     "type": "Paper Note",
-    "link": "https://dl-m9.github.io/paper-pages/cpguard/index.html",
-    "tags": [
-      "Multi-Agent Trustworthiness"
-    ]
+    "link": "https://dl-m9.github.io/paper-pages/cpguard/index.html"
   },
   {
     "title": "AgentsCoDriver",
     "summary": "LLM-powered collaborative driving with lifelong learning for connected autonomous agents.",
     "date": "Apr. 2024",
+    "category": "LLM Agents",
     "type": "Article",
-    "link": "https://mp.weixin.qq.com/s/HVfs4-PT58WujCvEZZboug",
-    "tags": [
-      "LLM Agents",
-      "Intelligence"
-    ]
+    "link": "https://mp.weixin.qq.com/s/HVfs4-PT58WujCvEZZboug"
   }
 ]
