@@ -5,7 +5,7 @@ Source of https://dl-m9.github.io/blog/, the blog of Senkang Forest Hu.
 - `index.html`: the blog index. It lists the posts in `posts.json`.
 - `posts.json`: one entry per post, newest first.
 - `posts/`: posts hosted on this site.
-- `assets/post.css`: shared styles for hosted posts.
+- `assets/post.css` and `assets/post.js`: shared styles and behaviour for hosted posts.
 - `templates/post/`: the post template.
 
 Each post keeps its own license and credits.
@@ -14,6 +14,10 @@ Each post keeps its own license and credits.
 
 1. Copy `templates/post/` to `posts/<slug>/`.
 2. In `posts/<slug>/index.html`, replace every `POST_...` placeholder, write the body and delete the `noindex` meta tag. Put images in the same folder.
+   - The page has a sticky header with a theme switch, a title block, a row of post details, a table of contents and a centred text column.
+   - The table of contents, reading time, progress bar and newer/older links are filled in by `assets/post.js`. Every `h2` and `h3` in the body becomes a contents entry.
+   - Add the class `wide` to a figure or a `table-wrap` to let it grow past the text column on large screens.
+   - The lead image under the title is optional. Uncomment the `hero-figure` block to use it.
 3. Add an entry to `posts.json`, in date order:
 
    ```json

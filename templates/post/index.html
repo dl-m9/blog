@@ -5,6 +5,9 @@
     2. Replace every POST_... placeholder and the sample body below.
     3. Delete the "noindex" meta tag.
     4. Add an entry for the post to posts.json at the repo root.
+
+    The table of contents, reading time, progress bar and newer/older links are
+    filled in by assets/post.js. Headings h2 and h3 in the body become the contents.
 -->
 <html lang="en">
 
@@ -16,10 +19,11 @@
     <meta name="description" content="POST_SUMMARY">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="icon"
         href="data:image/svg+xml, <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☯️</text></svg>">
     <link rel="stylesheet" href="../../assets/post.css">
+    <script src="../../assets/post.js"></script>
 
     <!-- Math: write $inline$ or $$display$$ in the text. Remove these three lines if the post has no math. -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
@@ -29,31 +33,78 @@
 </head>
 
 <body>
-    <div class="wrap">
-        <nav class="topbar" aria-label="Site">
-            <a href="../../">Senkang Forest Hu · Blog</a>
-            <a class="home" href="../../">&larr; All posts</a>
-        </nav>
+    <nav class="topbar frame" aria-label="Site">
+        <a href="../../"><span class="brand-name">Senkang Forest Hu · </span>Blog</a>
+        <div class="right">
+            <a class="back" href="../../">&larr; All posts</a>
+            <button class="theme-toggle" type="button" aria-label="Switch between light and dark theme">
+                <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4.5"></circle>
+                    <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"></path>
+                </svg>
+                <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="progress" aria-hidden="true"></div>
+    </nav>
 
-        <article>
-            <header class="post-header">
-                <div class="category">POST_CATEGORY</div>
-                <h1>POST_TITLE</h1>
-                <p class="lede">POST_SUMMARY</p>
-                <div class="meta">Senkang Forest Hu · POST_DATE</div>
-            </header>
+    <article>
+        <header class="hero frame">
+            <div class="category">POST_CATEGORY</div>
+            <h1>POST_TITLE</h1>
+            <p class="lede">POST_SUMMARY</p>
+
+            <!-- Optional lead image or video. Delete this figure if the post has none. -->
+            <!--
+            <figure class="hero-figure">
+                <img src="hero.png" alt="Describe the image">
+            </figure>
+            -->
+        </header>
+
+        <div class="meta frame">
+            <dl>
+                <dt>Author</dt>
+                <dd>Senkang Forest Hu</dd>
+            </dl>
+            <dl>
+                <dt>Published</dt>
+                <dd>POST_DATE</dd>
+            </dl>
+            <dl>
+                <dt>Topic</dt>
+                <dd>POST_CATEGORY</dd>
+            </dl>
+            <dl>
+                <dt>Length</dt>
+                <dd data-reading-time></dd>
+            </dl>
+        </div>
+
+        <div class="layout">
+            <nav class="toc" aria-label="Contents">
+                <p class="toc-title">Contents</p>
+                <ol data-toc></ol>
+            </nav>
 
             <div class="post-body">
+                <details class="toc-inline">
+                    <summary>Contents</summary>
+                    <ol data-toc></ol>
+                </details>
+
                 <p>Opening paragraph. Say what the post is about and why it matters to the reader.</p>
 
-                <h2>Section heading</h2>
+                <h2>First section</h2>
                 <p>Body text with a <a href="https://example.com">link</a>, some <code>inline code</code> and inline
                     math such as $\pi_\theta(a \mid s)$.</p>
 
                 <p>Display math:</p>
                 $$J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\sum_{t=0}^{T} \gamma^t r_t\right]$$
 
-                <h3>Subsection heading</h3>
+                <h3>A subsection</h3>
                 <ul>
                     <li>First point.</li>
                     <li>Second point.</li>
@@ -61,6 +112,10 @@
 
                 <pre><code>def reward(trajectory):
     return sum(step.reward for step in trajectory)</code></pre>
+
+                <h2>Second section</h2>
+                <p>Figures sit in the text column by default. Add the class <code>wide</code> to a figure or a table
+                    wrapper to let it grow past the text column on large screens.</p>
 
                 <figure>
                     <!-- Put images next to this file and reference them by file name. -->
@@ -76,6 +131,7 @@
                     <p>A highlighted note for the reader.</p>
                 </div>
 
+                <h2>Third section</h2>
                 <div class="table-wrap">
                     <table>
                         <thead>
@@ -93,12 +149,14 @@
                     </table>
                 </div>
             </div>
+        </div>
 
-            <footer class="post-footer">
-                <a class="back" href="../../">&larr; All posts</a>
-            </footer>
-        </article>
-    </div>
+        <footer class="post-footer frame">
+            <!-- data-base is the path from this page to the blog root. -->
+            <nav class="post-nav" data-base="../../" aria-label="More posts"></nav>
+            <p class="credit">&copy; Senkang Forest Hu. <a href="../../">Back to all posts</a></p>
+        </footer>
+    </article>
 </body>
 
 </html>
