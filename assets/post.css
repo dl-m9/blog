@@ -1,0 +1,253 @@
+/* Shared styles for posts hosted on this blog. Colors match index.html. */
+:root {
+    --bg: #ffffff;
+    --text: #2c3e50;
+    --muted: #6c757d;
+    --line: #e9ecef;
+    --accent: #2563eb;
+    --accent-soft: rgba(37, 99, 235, 0.1);
+    --code-bg: #f6f8fa;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #12151c;
+        --text: #e6e9ef;
+        --muted: #9aa3b2;
+        --line: #262b36;
+        --accent: #7aa2ff;
+        --accent-soft: rgba(122, 162, 255, 0.14);
+        --code-bg: #1a1f29;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Montserrat', -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.75;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.topbar a {
+    color: var(--text);
+}
+
+.topbar .home {
+    color: var(--muted);
+}
+
+/* Post header */
+.post-header {
+    padding: 48px 0 24px;
+    border-bottom: 1px solid var(--line);
+}
+
+.post-header .category {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.post-header h1 {
+    margin: 8px 0 14px;
+    font-family: 'Playfair Display', Georgia, "Songti SC", serif;
+    font-size: clamp(1.9rem, 5vw, 2.6rem);
+    line-height: 1.2;
+}
+
+.post-header .lede {
+    margin: 0 0 14px;
+    font-size: 1.05rem;
+    color: var(--muted);
+}
+
+.post-header .meta {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+/* Post body */
+.post-body {
+    padding: 28px 0 8px;
+    font-size: 1rem;
+    overflow-wrap: break-word;
+}
+
+.post-body h2 {
+    margin: 2.2em 0 0.6em;
+    font-size: 1.45rem;
+    line-height: 1.3;
+}
+
+.post-body h3 {
+    margin: 1.8em 0 0.5em;
+    font-size: 1.15rem;
+    line-height: 1.35;
+}
+
+.post-body p,
+.post-body ul,
+.post-body ol {
+    margin: 0 0 1.1em;
+}
+
+.post-body ul,
+.post-body ol {
+    padding-left: 1.4em;
+}
+
+.post-body li {
+    margin-bottom: 0.35em;
+}
+
+.post-body img,
+.post-body video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 6px;
+}
+
+.post-body figure {
+    margin: 1.8em 0;
+}
+
+.post-body figcaption {
+    margin-top: 0.6em;
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-align: center;
+}
+
+.post-body blockquote {
+    margin: 1.4em 0;
+    padding: 0.2em 0 0.2em 1em;
+    border-left: 3px solid var(--accent);
+    color: var(--muted);
+}
+
+.post-body blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+.post-body code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.88em;
+    background: var(--code-bg);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+}
+
+.post-body pre {
+    margin: 1.4em 0;
+    padding: 14px 16px;
+    background: var(--code-bg);
+    border-radius: 8px;
+    overflow-x: auto;
+    line-height: 1.55;
+}
+
+.post-body pre code {
+    background: none;
+    padding: 0;
+    font-size: 0.86rem;
+}
+
+.post-body .table-wrap {
+    margin: 1.4em 0;
+    overflow-x: auto;
+}
+
+.post-body table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+
+.post-body th,
+.post-body td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+}
+
+.post-body th {
+    font-weight: 600;
+}
+
+.post-body .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4px 0;
+}
+
+.post-body .note {
+    margin: 1.4em 0;
+    padding: 12px 16px;
+    background: var(--accent-soft);
+    border-radius: 8px;
+}
+
+.post-body .note p:last-child {
+    margin-bottom: 0;
+}
+
+.post-body hr {
+    margin: 2.2em 0;
+    border: 0;
+    border-top: 1px solid var(--line);
+}
+
+/* Post footer */
+.post-footer {
+    margin-top: 32px;
+    padding: 24px 0 56px;
+    border-top: 1px solid var(--line);
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.post-footer .back {
+    font-weight: 600;
+}
+
+@media (max-width: 560px) {
+    .post-header {
+        padding-top: 28px;
+    }
+}

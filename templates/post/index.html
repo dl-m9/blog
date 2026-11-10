@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--
+    Post template. To write a new post:
+    1. Copy this folder to posts/<your-post-slug>/.
+    2. Replace every POST_... placeholder and the sample body below.
+    3. Delete the "noindex" meta tag.
+    4. Add an entry for the post to posts.json at the repo root.
+-->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>POST_TITLE - Senkang Forest Hu</title>
+    <meta name="description" content="POST_SUMMARY">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="icon"
+        href="data:image/svg+xml, <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☯️</text></svg>">
+    <link rel="stylesheet" href="../../assets/post.css">
+
+    <!-- Math: write $inline$ or $$display$$ in the text. Remove these three lines if the post has no math. -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+
+<body>
+    <div class="wrap">
+        <nav class="topbar" aria-label="Site">
+            <a href="../../">Senkang Forest Hu · Blog</a>
+            <a class="home" href="https://dl-m9.github.io/">Homepage &rarr;</a>
+        </nav>
+
+        <article>
+            <header class="post-header">
+                <div class="category">POST_CATEGORY</div>
+                <h1>POST_TITLE</h1>
+                <p class="lede">POST_SUMMARY</p>
+                <div class="meta">Senkang Forest Hu · POST_DATE</div>
+            </header>
+
+            <div class="post-body">
+                <p>Opening paragraph. Say what the post is about and why it matters to the reader.</p>
+
+                <h2>Section heading</h2>
+                <p>Body text with a <a href="https://example.com">link</a>, some <code>inline code</code> and inline
+                    math such as $\pi_\theta(a \mid s)$.</p>
+
+                <p>Display math:</p>
+                $$J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\sum_{t=0}^{T} \gamma^t r_t\right]$$
+
+                <h3>Subsection heading</h3>
+                <ul>
+                    <li>First point.</li>
+                    <li>Second point.</li>
+                </ul>
+
+                <pre><code>def reward(trajectory):
+    return sum(step.reward for step in trajectory)</code></pre>
+
+                <figure>
+                    <!-- Put images next to this file and reference them by file name. -->
+                    <!-- <img src="figure-1.png" alt="Describe the figure"> -->
+                    <figcaption>Figure 1. Caption text.</figcaption>
+                </figure>
+
+                <blockquote>
+                    <p>A quotation or a key takeaway.</p>
+                </blockquote>
+
+                <div class="note">
+                    <p>A highlighted note for the reader.</p>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Baseline</td>
+                                <td>0.0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <footer class="post-footer">
+                <a class="back" href="../../">&larr; All posts</a>
+            </footer>
+        </article>
+    </div>
+</body>
+
+</html>
