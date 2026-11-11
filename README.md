@@ -31,7 +31,7 @@ Each post keeps its own license and credits.
    }
    ```
 
-   `category` is the technical topic and drives the filter buttons on the index. `type` is one of `Article`, `Paper Note` or `Translation`. For a post hosted elsewhere, set `link` to its full URL.
+   `category` is the technical topic and drives the filter buttons on the index. `type` is `Article` or `Paper Note`. For a post hosted elsewhere, set `link` to its full URL.
 
 4. Preview with `python3 -m http.server 8002`, then commit and push to `main`.
 
