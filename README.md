@@ -37,4 +37,11 @@ Each post keeps its own license and credits.
 
 The MoE handbook under `posts/moe-training-handbook-zh/` is a prebuilt site with its own layout and does not use the template.
 
-The playbook under `posts/smol-training-playbook-zh/` is a chapter-by-chapter Simplified Chinese adaptation of the Hugging Face original. It uses the post template and keeps the full author list, source link and CC BY 4.0 notice on the page. The roadmap table in its `index.html` records which chapters are done. When a chapter is finished, change its status from 待译 to 已译 and point the row at the local anchor.
+The Smol Training Playbook has two local editions:
+
+- `posts/smol-training-playbook-en/`: the complete English original, with its original code, formulas, figures, author list and CC BY 4.0 notice. The static assets and chart datasets are stored with the post. External dataset viewers still load from their original services. `SOURCE.md` records the upstream revision and hosting changes.
+- `posts/smol-training-playbook-zh/`: the Simplified Chinese edition. The opening chapters keep the existing prose, and the remaining chapters are now complete. The roadmap links to local chapter anchors. Code, formulas, bibliography titles and interactive chart labels retain their original form.
+
+The Chinese page embeds isolated local figure documents from the English edition's `figures/` directory. `figures.js` and `figures/frame.js` synchronize height and the shared blog theme. Keep both editions together when moving or updating them.
+
+When updating a mirrored article, check the actual asset deployment paths and verify that CSV/JSON responses parse correctly. A missing path on the original Space may return the HTML homepage with HTTP 200. Recheck text coverage, preserved code/formulas, local links and charts before publishing.

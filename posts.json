@@ -1,7 +1,7 @@
 [
   {
     "title": "Smol 训练手册：构建世界级大语言模型的秘诀",
-    "summary": "Hugging Face 关于训练 SmolLM3 的长篇实战指南，覆盖训练指南针、消融实验、数据整理、后训练与 GPU 基础设施。简体中文版，分章更新。",
+    "summary": "Hugging Face 关于训练 SmolLM3 的完整实战指南，覆盖架构设计、数据整理、训练调试、后训练与 GPU 基础设施。简体中文全文，附本站英文原文。",
     "date": "Nov. 2026",
     "category": "LLM Training",
     "type": "Article",
@@ -49,11 +49,11 @@
   },
   {
     "title": "The Smol Training Playbook: The Secrets to Building World-Class LLMs",
-    "summary": "The Hugging Face long-form guide to training SmolLM3, from the training compass through pretraining, post-training and infrastructure.",
+    "summary": "The complete Hugging Face guide to training SmolLM3, with original text, code, formulas and interactive figures. English and Simplified Chinese editions are hosted on this blog.",
     "date": "Oct. 2025",
     "category": "LLM Training",
     "type": "Article",
-    "link": "https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook"
+    "link": "posts/smol-training-playbook-en/"
   },
   {
     "title": "AgentsCoMerge",

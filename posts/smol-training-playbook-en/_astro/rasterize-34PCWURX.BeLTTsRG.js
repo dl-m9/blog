@@ -1,0 +1,1 @@
+import{toCanvas as a}from"./toCanvas.f404_zN8.js";import"./snapdom.C4ePOnk6.js";import"./preload-helper.CLcXU_4U.js";async function d(r,t){let i=await a(r,t),e=new Image;return e.src=i.toDataURL(`image/${t.format}`,t.quality),await e.decode(),e.style.width=`${i.width/t.dpr}px`,e.style.height=`${i.height/t.dpr}px`,e}export{d as rasterize};

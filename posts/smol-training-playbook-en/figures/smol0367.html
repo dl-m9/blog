@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en"><head><base href="../"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"The Smol Training Playbook: The Secrets to Building World-Class LLMs","description":"The Smol Training Playbook: The Secrets to Building World-Class LLMs","datePublished":"Oct. 30, 2025","author":[{"@type":"Person","name":"Loubna Ben Allal"},{"@type":"Person","name":"Lewis Tunstall"},{"@type":"Person","name":"Nouamane Tazi"},{"@type":"Person","name":"Elie Bakouch"},{"@type":"Person","name":"Ed Beeching"},{"@type":"Person","name":"Carlos Miguel Patiño"},{"@type":"Person","name":"Clémentine Fourrier"},{"@type":"Person","name":"Thibaud Frere"},{"@type":"Person","name":"Anton Lozhkov"},{"@type":"Person","name":"Colin Raffel"},{"@type":"Person","name":"Leandro von Werra"},{"@type":"Person","name":"Thomas Wolf"}],"keywords":"research-article-template, scientific paper, data visualization","mainEntityOfPage":"http://localhost:4321/","image":["/thumb.png"]}</script><script>
+      (() => {
+        try {
+          const saved = localStorage.getItem("blog-theme");
+          const prefersDark =
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const theme = saved || (prefersDark ? "dark" : "light");
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch {}
+      })();
+    </script><!-- Hash Router for HF Spaces compatibility --><script>
+      (() => {
+        // Routes map: #/route -> actual page path
+        const routes = {
+          '/dataviz': '/dataviz',
+          '/trackio': '/trackio',
+        };
+        
+        function handleHashRoute() {
+          const hash = window.location.hash;
+          // Only handle hashes that start with #/ (route pattern)
+          if (!hash.startsWith('#/')) return;
+          
+          const route = hash.slice(1); // Remove the # prefix
+          const targetPath = routes[route];
+          
+          if (targetPath) {
+            // Redirect to the actual page
+            window.location.href = targetPath;
+          }
+        }
+        
+        // Check on page load
+        handleHashRoute();
+        
+        // Also listen for hash changes (in case user navigates via hash)
+        window.addEventListener('hashchange', handleHashRoute);
+      })();
+    </script><script src="scripts/color-palettes.js" type="module"></script><link href="_astro/dataviz.BQ40vXNJ.css" rel="stylesheet"/>
+<link href="_astro/index.Ck_RWp_s.css" rel="stylesheet"/>
+<link href="_astro/index.Cf5GIHhJ.css" rel="stylesheet"/><script src="_astro/hoisted.C_kzFZps.js" type="module"></script>
+<script src="_astro/page.B-laVmHR.js" type="module"></script><link href="../../assets/post.css" rel="stylesheet"/><script defer="" src="figures/frame.js"></script><style>html,body{height:auto!important;min-height:0!important;overflow-x:hidden}body{margin:0!important;padding:8px!important}.html-embed{width:100%!important;max-width:100%!important;margin:0!important;left:0!important;transform:none!important}.html-embed__card{max-width:100%!important}figure{margin:0}body>figure{display:block}pre.mermaid{overflow:auto}</style><meta content="noindex" name="robots"/></head><body><pre class="mermaid">graph TD
+    %% Single Level 1 node
+    L1["Level 1<br/>nn-4aed5..."]:::level1
+
+    %% Single Level 2 node
+    L2["Level 2<br/>nn-48b0a..."]:::level2
+
+    %% 12 nodes of Level 3
+    L3_1["Level 3<br/>nn-d2ad4..."]:::level3
+    L3_2["Level 3<br/>nn-2d36a..."]:::level3
+    L3_3["Level 3<br/>nn-65fc9..."]:::level3
+    L3_4["Level 3<br/>nn-fbb73..."]:::level3
+    L3_5["Level 3<br/>nn-65290..."]:::level3
+    L3_6["Level 3<br/>nn-27373..."]:::level3
+    L3_7["Level 3<br/>nn-5adeb..."]:::level3
+    L3_8["Level 3<br/>nn-dbe4f..."]:::level3
+    L3_9["Level 3<br/>nn-fde84..."]:::level3
+    L3_10["Level 3<br/>nn-3c5c0..."]:::level3
+    L3_11["Level 3<br/>nn-94247..."]:::level3
+    L3_12["Level 3<br/>nn-8f3c1..."]:::level3
+
+    %% L1 -&gt; L2
+    L1 --&gt; L2
+
+    %% L2 -&gt; L3 (12 arrows)
+    L2 --&gt; L3_1
+    L2 --&gt; L3_2
+    L2 --&gt; L3_3
+    L2 --&gt; L3_4
+    L2 --&gt; L3_5
+    L2 --&gt; L3_6
+    L2 --&gt; L3_7
+    L2 --&gt; L3_8
+    L2 --&gt; L3_9
+    L2 --&gt; L3_10
+    L2 --&gt; L3_11
+    L2 --&gt; L3_12
+
+    %% Distribution Level 3 -&gt; Leaf nodes (instance info)
+    %% 1st Level 3 has 2 leaves
+    L3_1 --&gt; L4_1["ID: 02e1b4f9<br/>ip-26-0-171-102<br/>p5.48xlarge"]:::level4
+    L3_1 --&gt; L4_2["ID: 05388ebf<br/>ip-26-0-171-230<br/>p5.48xlarge"]:::level4
+
+    %% 2nd, 3rd, 4th have 1 each
+    L3_2 --&gt; L4_3["ID: 03bfac00<br/>ip-26-0-168-30<br/>p5.48xlarge"]:::level4
+    L3_3 --&gt; L4_4["ID: d92bab46<br/>ip-26-0-168-95<br/>p5.48xlarge"]:::level4
+    L3_4 --&gt; L4_5["ID: 97a542e4<br/>ip-26-0-163-158<br/>p5.48xlarge"]:::level4
+
+    %% 5th has 3
+    L3_5 --&gt; L4_6["ID: e2c87e43<br/>ip-26-0-167-9<br/>p5.48xlarge"]:::level4
+    L3_5 --&gt; L4_7["ID: afa887ea<br/>ip-26-0-168-120<br/>p5.48xlarge"]:::level4
+    L3_5 --&gt; L4_8["ID: 66c12e70<br/>ip-26-0-167-177<br/>p5.48xlarge"]:::level4
+
+    %% 6th, 7th, 8th have 1 each
+    L3_6 --&gt; L4_9["ID: 9412bdf3<br/>ip-26-0-168-52<br/>p5.48xlarge"]:::level4
+    L3_7 --&gt; L4_10["ID: 87bd4dc8<br/>ip-26-0-167-111<br/>p5.48xlarge"]:::level4
+    L3_8 --&gt; L4_11["ID: b001549b<br/>ip-26-0-166-244<br/>p5.48xlarge"]:::level4
+
+    %% 9th has 2
+    L3_9 --&gt; L4_12["ID: 10ed8172<br/>ip-26-0-107-245<br/>p5.48xlarge"]:::level4
+    L3_9 --&gt; L4_13["ID: 7c1d0a09<br/>ip-26-0-168-238<br/>p5.48xlarge"]:::level4
+
+    %% 10th, 11th, 12th have 1 each
+    L3_10 --&gt; L4_14["ID: 925ce932<br/>ip-26-0-167-217<br/>p5.48xlarge"]:::level4
+    L3_11 --&gt; L4_15["ID: c9bc34db<br/>ip-26-0-171-168<br/>p5.48xlarge"]:::level4
+    L3_12 --&gt; L4_16["ID: 328d5d04<br/>ip-26-0-167-127<br/>p5.48xlarge"]:::level4
+
+    %% Styles
+    classDef level1 fill:#c8e6c9
+    classDef level2 fill:#e1f5fe
+    classDef level3 fill:#fff9c4
+    classDef level4 fill:#ffcdd2</pre></body></html>

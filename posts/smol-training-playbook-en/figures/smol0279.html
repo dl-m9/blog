@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en"><head><base href="../"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"The Smol Training Playbook: The Secrets to Building World-Class LLMs","description":"The Smol Training Playbook: The Secrets to Building World-Class LLMs","datePublished":"Oct. 30, 2025","author":[{"@type":"Person","name":"Loubna Ben Allal"},{"@type":"Person","name":"Lewis Tunstall"},{"@type":"Person","name":"Nouamane Tazi"},{"@type":"Person","name":"Elie Bakouch"},{"@type":"Person","name":"Ed Beeching"},{"@type":"Person","name":"Carlos Miguel Patiño"},{"@type":"Person","name":"Clémentine Fourrier"},{"@type":"Person","name":"Thibaud Frere"},{"@type":"Person","name":"Anton Lozhkov"},{"@type":"Person","name":"Colin Raffel"},{"@type":"Person","name":"Leandro von Werra"},{"@type":"Person","name":"Thomas Wolf"}],"keywords":"research-article-template, scientific paper, data visualization","mainEntityOfPage":"http://localhost:4321/","image":["/thumb.png"]}</script><script>
+      (() => {
+        try {
+          const saved = localStorage.getItem("blog-theme");
+          const prefersDark =
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const theme = saved || (prefersDark ? "dark" : "light");
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch {}
+      })();
+    </script><!-- Hash Router for HF Spaces compatibility --><script>
+      (() => {
+        // Routes map: #/route -> actual page path
+        const routes = {
+          '/dataviz': '/dataviz',
+          '/trackio': '/trackio',
+        };
+        
+        function handleHashRoute() {
+          const hash = window.location.hash;
+          // Only handle hashes that start with #/ (route pattern)
+          if (!hash.startsWith('#/')) return;
+          
+          const route = hash.slice(1); // Remove the # prefix
+          const targetPath = routes[route];
+          
+          if (targetPath) {
+            // Redirect to the actual page
+            window.location.href = targetPath;
+          }
+        }
+        
+        // Check on page load
+        handleHashRoute();
+        
+        // Also listen for hash changes (in case user navigates via hash)
+        window.addEventListener('hashchange', handleHashRoute);
+      })();
+    </script><script src="scripts/color-palettes.js" type="module"></script><link href="_astro/dataviz.BQ40vXNJ.css" rel="stylesheet"/>
+<link href="_astro/index.Ck_RWp_s.css" rel="stylesheet"/>
+<link href="_astro/index.Cf5GIHhJ.css" rel="stylesheet"/><script src="_astro/hoisted.C_kzFZps.js" type="module"></script>
+<script src="_astro/page.B-laVmHR.js" type="module"></script><link href="../../assets/post.css" rel="stylesheet"/><script defer="" src="figures/frame.js"></script><style>html,body{height:auto!important;min-height:0!important;overflow-x:hidden}body{margin:0!important;padding:8px!important}.html-embed{width:100%!important;max-width:100%!important;margin:0!important;left:0!important;transform:none!important}.html-embed__card{max-width:100%!important}figure{margin:0}body>figure{display:block}pre.mermaid{overflow:auto}</style><meta content="noindex" name="robots"/></head><body><figure class="html-embed html-embed--downloadable" id="training-pipeline"><div class="html-embed__card is-frameless"><div id="frag-h80saajz3gn"><div class="training-pipeline" id="training-pipeline"></div>
+<style>
+    .training-pipeline {
+        font-family: 'Arial', sans-serif;
+        margin: 20px 0;
+        padding: 0;
+    }
+
+    .training-pipeline .container {
+        display: flex;
+        gap: 30px;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+    }
+
+    .training-pipeline .phase {
+        flex: 0 1 auto;
+        border: 1px dashed color-mix(in srgb, var(--text-color, #333) 40%, transparent);
+        border-radius: 8px;
+        padding: 15px;
+    }
+
+    .training-pipeline .phase-header {
+        font-size: 14px;
+        font-weight: bold;
+        color: var(--text-color, #333);
+        margin-bottom: 20px;
+        text-align: left;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        opacity: 0.6;
+    }
+
+    .training-pipeline .steps-row {
+        display: flex;
+        gap: 15px;
+        align-items: flex-start;
+        justify-content: center;
+        flex-wrap: nowrap;
+    }
+
+    .training-pipeline .step-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 0 1 auto;
+        min-width: 150px;
+        max-width: 240px;
+    }
+
+    .training-pipeline .step {
+        width: 100%;
+        padding: 16px;
+        border-radius: 8px;
+        border: 1px solid;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .training-pipeline .step-title {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-bottom: 5px;
+    }
+
+    .training-pipeline .step-info {
+        font-size: 11px;
+        opacity: 0.9;
+    }
+
+    .training-pipeline .arrow-right {
+        font-size: 24px;
+        color: #999;
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        margin-top: 40px;
+    }
+
+    .training-pipeline .arrow-between {
+        font-size: 32px;
+        color: #999;
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    .training-pipeline .model-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 16px;
+        background: linear-gradient(135deg, #FFB6B6, #FF9999);
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 11px;
+        color: #333;
+        box-shadow: 0 2px 6px rgba(255, 182, 182, 0.3);
+        position: relative;
+        margin-top: 15px;
+        white-space: nowrap;
+    }
+
+    .training-pipeline .model-badge::before {
+        content: '';
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2px;
+        height: 15px;
+        border-left: 2px dashed #FFB6B6;
+    }
+
+    .training-pipeline .model-icon {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .training-pipeline .pre-training {
+        background: color-mix(in srgb, #87CEEB 60%, transparent);
+        border-color: #87CEEB;
+        color: var(--text-color, #000);
+    }
+
+    .training-pipeline .sft {
+        background: color-mix(in srgb, #F4C28F 60%, transparent);
+        border-color: #F4C28F;
+        color: var(--text-color, #000);
+    }
+
+    .training-pipeline .rl {
+        background: color-mix(in srgb, #E6B8E6 60%, transparent);
+        border-color: #E6B8E6;
+        color: var(--text-color, #000);
+    }
+
+    @media (max-width: 1100px) {
+        .training-pipeline .container {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .training-pipeline .phase {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .training-pipeline .arrow-between {
+            transform: rotate(90deg);
+            margin: 10px 0;
+            align-self: center;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .training-pipeline .steps-row {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .training-pipeline .arrow-right {
+            transform: rotate(90deg);
+            margin: 10px 0;
+        }
+
+        .training-pipeline .step-wrapper {
+            max-width: 100%;
+            width: 100%;
+        }
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const container = document.querySelector('.training-pipeline');
+
+        container.innerHTML = `
+            <div class="container">
+                <!-- PRE-TRAINING -->
+                <div class="phase">
+                    <div class="phase-header">Pre-Training</div>
+                    <div class="steps-row">
+                        <div class="step-wrapper">
+                            <div class="step pre-training">
+                                <div class="step-title">General<br/>Pre-training</div>
+                                <div class="step-info">8T tokens<br/>8k context</div>
+                            </div>
+                        </div>
+                        
+                        <div class="arrow-right">→</div>
+                        
+                        <div class="step-wrapper">
+                            <div class="step pre-training">
+                                <div class="step-title">Code World Modeling<br/>Mid-training</div>
+                                <div class="step-info">5T tokens<br/>131k context</div>
+                            </div>
+                            <div class="model-badge">
+                                <span class="model-icon">📦</span>
+                                <span>CWM pretrained</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ARROW BETWEEN PHASES -->
+                <div class="arrow-between">→</div>
+
+                <!-- POST-TRAINING -->
+                <div class="phase">
+                    <div class="phase-header">Post-Training</div>
+                    <div class="steps-row">
+                        <div class="step-wrapper">
+                            <div class="step sft">
+                                <div class="step-title">Supervised Fine-tuning<br/>Instruction and Reasoning</div>
+                                <div class="step-info">100B tokens<br/>32k context</div>
+                            </div>
+                            <div class="model-badge">
+                                <span class="model-icon">📦</span>
+                                <span>CWM sft</span>
+                            </div>
+                        </div>
+                        
+                        <div class="arrow-right">→</div>
+                        
+                        <div class="step-wrapper">
+                            <div class="step rl">
+                                <div class="step-title">Joint Reinforcement Learning<br/>Agentic and Reasoning</div>
+                                <div class="step-info">172B tokens<br/>131k context</div>
+                            </div>
+                            <div class="model-badge">
+                                <span class="model-icon">📦</span>
+                                <span>CWM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+</script></div><button aria-label="Download visualization as PNG" class="html-embed__download" data-filename="training-pipeline" title="Download as PNG"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg></button></div></figure></body></html>
