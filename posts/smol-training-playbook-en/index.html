@@ -71,9 +71,9 @@ section.content-grid .table-of-contents{top:calc(var(--bar-h) + 28px);margin-top
 
 .hero .hero-banner{margin-top:24px}
 .post-body{font-family:"IBM Plex Sans",sans-serif}
-.smol-source{margin:0 0 32px;padding:16px 20px;border:1px solid var(--line);border-radius:6px}
-.smol-source p{margin:0 0 8px}
-.smol-source p:last-child{margin-bottom:0}
+
+
+
 
 .meta .smol-authors{flex:1 1 100%;max-width:100%;grid-column:1/-1}
 .meta dl{min-width:0}
@@ -2062,7 +2062,7 @@ section.content-grid .table-of-contents{top:calc(var(--bar-h) + 28px);margin-top
   } else {
     buildTOC();
   }
-</script> <main><div class="smol-source"><p><a href="../smol-training-playbook-zh/" hreflang="zh-CN" lang="zh-CN">简体中文</a> · <b>English original</b> · <a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">Hugging Face source</a></p><p>This is a complete local copy of the English article by Loubna Ben Allal, Lewis Tunstall, Nouamane Tazi, Elie Bakouch, Ed Beeching, Carlos Miguel Patiño, Clémentine Fourrier, Thibaud Frere, Anton Lozhkov, Colin Raffel, Leandro von Werra and Thomas Wolf. The article text is preserved. Navigation and resource paths have been adapted for this blog.</p><p>Shared under <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY 4.0</a>. See the <a href="LICENSE">original license</a> and <a href="SOURCE.md">source record</a>. Third party assets retain the rights and credits stated in their captions. Interactive charts retain their English labels.</p></div> <h2 id="introduction"><a href="#introduction">Introduction</a></h2>
+</script> <main> <h2 id="introduction"><a href="#introduction">Introduction</a></h2>
 <p>What does it actually take to train a high-performance LLM today?</p>
 <div class="sidenote-container"> <aside class="sidenote"> <p>Reading time: 2-4 days.</p> </aside> </div>
 <p>Published research makes it look straightforward: strategic architecture choices, carefully curated datasets, and sufficient compute. The results are polished, the ablations are structured and clean. Every decision seems obvious in hindsight. But those reports only show what worked and apply a bit of rosy retrospection—they don’t capture the 2 a.m. dataloader debugging sessions, the loss spikes, or the subtle tensor parallelism bug (see later!) that quietly sabotages your training. The reality is messier, more iterative, and full of decisions that don’t make it into the final paper.</p>
@@ -83146,7 +83146,7 @@ Made with ❤️ with <a href="https://huggingface.co/spaces/tfrere/research-art
     // Resize on window changes (e.g., fonts, layout)
     // No textarea auto-resize needed for <pre> blocks
   })();
-</script> <footer class="post-footer frame">
+</script> <footer class="post-footer frame"><p class="credit"><a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">Hugging Face original</a> · <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY 4.0</a> · <a href="LICENSE">License</a>. Navigation and page formatting have been adapted.</p>
 <!-- data-base is the path from this page to the blog root. -->
 <nav aria-label="More posts" class="post-nav" data-base="../../"></nav>
 <p class="credit">© Senkang Forest Hu. <a href="../../">Back to all posts</a></p>
