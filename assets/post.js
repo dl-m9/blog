@@ -35,8 +35,11 @@
             timeSlot.textContent = minutes + ' min read';
         }
 
-        // Table of contents from the h2 and h3 headings.
-        const headings = Array.from(body.querySelectorAll('h2, h3'));
+        // Long articles can opt into the same nested, scroll-driven TOC as the original.
+        const autoCollapse = body.hasAttribute('data-toc-auto-collapse');
+        const headings = Array.from(body.querySelectorAll(autoCollapse ? 'h2, h3, h4' : 'h2, h3'));
+        const desktopTOC = window.matchMedia('(min-width: 1100px)');
+        const tocTrees = [];
         const tocTargets = document.querySelectorAll('[data-toc]');
         const used = {};
         headings.forEach(function (h, i) {
@@ -55,39 +58,95 @@
                 if (box) box.hidden = true;
                 return;
             }
+            const items = new Map();
+            const stack = [];
+            if (autoCollapse) {
+                target.closest('.toc, .toc-inline').classList.add('toc-nested');
+                target.dataset.tocTree = '';
+            }
             headings.forEach(function (h) {
+                const level = Number(h.tagName.slice(1));
                 const li = document.createElement('li');
-                if (h.tagName === 'H3') li.className = 'sub';
                 const a = document.createElement('a');
                 a.href = '#' + h.id;
                 a.textContent = h.textContent;
                 li.appendChild(a);
-                target.appendChild(li);
+                if (autoCollapse) {
+                    while (stack.length && stack[stack.length - 1].level >= level) stack.pop();
+                    const parent = stack[stack.length - 1];
+                    let list = target;
+                    if (parent) {
+                        if (!parent.children) {
+                            parent.children = document.createElement('ol');
+                            parent.children.className = 'toc-children';
+                            parent.li.appendChild(parent.children);
+                        }
+                        list = parent.children;
+                    }
+                    list.appendChild(li);
+                    const item = { level: level, li: li, children: null, link: a };
+                    items.set(h.id, item);
+                    stack.push(item);
+                } else {
+                    if (h.tagName === 'H3') li.className = 'sub';
+                    target.appendChild(li);
+                }
                 links.push(a);
             });
+            if (autoCollapse) {
+                tocTrees.push(items);
+                target.addEventListener('click', function (event) {
+                    if (!event.target.closest('a')) return;
+                    const details = target.closest('details');
+                    if (details) details.open = false;
+                });
+            }
         });
 
         // Progress bar and the current section in the table of contents.
         const bar = document.querySelector('.progress');
         let ticking = false;
+        let previousHeading;
+        let previousDesktop;
         function update() {
             ticking = false;
             const max = document.documentElement.scrollHeight - window.innerHeight;
             if (bar) bar.style.width = (max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0) + '%';
 
             let current = null;
+            // Match anchor landing positions below the sticky header.
+            const offset = autoCollapse ? (parseFloat(getComputedStyle(root).scrollPaddingTop) || 76) + 2 : 120;
             for (const h of headings) {
-                if (h.getBoundingClientRect().top <= 120) current = h; else break;
+                if (h.getBoundingClientRect().top <= offset) current = h; else break;
             }
             links.forEach(function (a) {
                 if (current && a.getAttribute('href') === '#' + current.id) a.setAttribute('aria-current', 'true');
                 else a.removeAttribute('aria-current');
             });
+            if (autoCollapse && (current !== previousHeading || desktopTOC.matches !== previousDesktop)) {
+                tocTrees.forEach(function (items) {
+                    const active = current && items.get(current.id);
+                    items.forEach(function (item) {
+                        if (!item.children) return;
+                        const expanded = !desktopTOC.matches || Boolean(active && item.li.contains(active.li));
+                        item.children.hidden = !expanded;
+                        item.link.setAttribute('aria-expanded', String(expanded));
+                    });
+                });
+                previousHeading = current;
+                previousDesktop = desktopTOC.matches;
+            }
         }
         window.addEventListener('scroll', function () {
             if (!ticking) { ticking = true; requestAnimationFrame(update); }
         }, { passive: true });
         window.addEventListener('resize', update);
+        if (autoCollapse) {
+            desktopTOC.addEventListener('change', update);
+            window.addEventListener('hashchange', update);
+            window.addEventListener('load', update, { once: true });
+            if (document.fonts) document.fonts.ready.then(update);
+        }
         update();
 
         // Previous and next posts, from posts.json. Only posts hosted on this site are linked.

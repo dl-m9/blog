@@ -297,6 +297,62 @@ summary:focus-visible {
     font-weight: 600;
 }
 
+
+/* Opt-in long-form TOC, matching the original playbook's hierarchy and scroll behavior. */
+.toc.toc-nested .toc-title {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+.toc-nested [data-toc-tree] {
+    border-left: 1px solid var(--line);
+    padding-left: 16px;
+    font-size: 13px;
+}
+.toc-nested [data-toc-tree] ol {
+    margin: 0 0 6px;
+    padding-left: 1em;
+}
+.toc-nested [data-toc-tree] li {
+    margin: 0.25em 0;
+}
+.toc-nested [data-toc-tree] a {
+    padding: 0;
+    color: var(--text);
+    font-weight: 400;
+}
+.toc-nested [data-toc-tree] > li > a {
+    font-weight: 700;
+}
+.toc-nested [data-toc-tree] a:hover,
+.toc-nested [data-toc-tree] a[aria-current="true"] {
+    color: var(--text);
+    text-decoration: underline;
+}
+.toc-nested [data-toc-tree] [hidden] {
+    display: none !important;
+}
+.toc-inline.toc-nested {
+    padding: 0;
+    background: none;
+}
+.toc-inline.toc-nested > summary {
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+.toc-inline.toc-nested[open] > summary {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.toc-inline.toc-nested [data-toc-tree] {
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-top: 0;
+    border-radius: 0 0 8px 8px;
+    font-size: 14px;
+}
+
 .post-body {
     min-width: 0;
     max-width: var(--measure);
