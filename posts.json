@@ -1,7 +1,7 @@
 [
   {
-    "title": "Smol 训练手册：构建世界级大语言模型的秘诀",
-    "summary": "Hugging Face 关于训练 SmolLM3 的完整实战指南，覆盖架构设计、数据整理、训练调试、后训练与 GPU 基础设施。简体中文全文，附本站英文原文。",
+    "title": "The Smol Training Playbook: The Secrets to Building World-Class LLMs",
+    "summary": "The Hugging Face guide to training SmolLM3, covering model architecture, data curation, training, post-training and GPU infrastructure.",
     "date": "Nov. 2026",
     "category": "LLM Training",
     "type": "Article",
@@ -49,7 +49,7 @@
   },
   {
     "title": "The Smol Training Playbook: The Secrets to Building World-Class LLMs",
-    "summary": "The complete Hugging Face guide to training SmolLM3, with original text, code, formulas and interactive figures. English and Simplified Chinese editions are hosted on this blog.",
+    "summary": "The complete Hugging Face guide to training SmolLM3, with original text, code, formulas and interactive figures.",
     "date": "Oct. 2025",
     "category": "LLM Training",
     "type": "Article",
