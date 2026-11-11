@@ -36,3 +36,5 @@ Each post keeps its own license and credits.
 4. Preview with `python3 -m http.server 8002`, then commit and push to `main`.
 
 The MoE handbook under `posts/moe-training-handbook-zh/` is a prebuilt site with its own layout and does not use the template.
+
+The playbook under `posts/smol-training-playbook-zh/` is a chapter-by-chapter Simplified Chinese adaptation of the Hugging Face original. It uses the post template and keeps the full author list, source link and CC BY 4.0 notice on the page. The roadmap table in its `index.html` records which chapters are done. When a chapter is finished, change its status from 待译 to 已译 and point the row at the local anchor.

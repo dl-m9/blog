@@ -1,5 +1,13 @@
 [
   {
+    "title": "Smol 训练手册：构建世界级大语言模型的秘诀",
+    "summary": "Hugging Face 关于训练 SmolLM3 的长篇实战指南，覆盖训练指南针、消融实验、数据整理、后训练与 GPU 基础设施。简体中文版，分章更新。",
+    "date": "Nov. 2026",
+    "category": "LLM Training",
+    "type": "Article",
+    "link": "posts/smol-training-playbook-zh/"
+  },
+  {
     "title": "The Ultimate MoE Training Handbook",
     "summary": "The Hugging Face handbook on training Mixture-of-Experts models, by Nouamane Tazi et al., in Simplified Chinese. Shared under CC BY-NC-SA 4.0.",
     "date": "Nov. 2026",
@@ -38,6 +46,14 @@
     "category": "LLM Efficiency",
     "type": "Paper Note",
     "link": "https://dl-m9.github.io/paper-pages/SVDecode/index.html"
+  },
+  {
+    "title": "The Smol Training Playbook: The Secrets to Building World-Class LLMs",
+    "summary": "The Hugging Face long-form guide to training SmolLM3, from the training compass through pretraining, post-training and infrastructure.",
+    "date": "Oct. 2025",
+    "category": "LLM Training",
+    "type": "Article",
+    "link": "https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook"
   },
   {
     "title": "AgentsCoMerge",

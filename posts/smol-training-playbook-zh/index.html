@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smol 训练手册：构建世界级大语言模型的秘诀 - Senkang Forest Hu</title>
+    <meta name="description" content="Hugging Face《The Smol Training Playbook》简体中文全译本，覆盖训练指南针、预训练、后训练与基础设施。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="icon"
+        href="data:image/svg+xml, <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☯️</text></svg>">
+    <link rel="stylesheet" href="../../assets/post.css">
+    <script src="../../assets/post.js"></script>
+
+    <!-- Math: write $inline$ or $$display$$ in the text. -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+
+    <style>
+        /* Latin copy keeps IBM Plex Sans, Chinese falls back to a system CJK face. */
+        body, .post-body, .hero, .meta, .toc {
+            font-family: "IBM Plex Sans", "PingFang SC", "Hiragino Sans GB",
+                "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+        }
+        .post-body p, .post-body li, .post-body td, .post-body th {
+            line-height: 1.85;
+        }
+        .status {
+            display: inline-block;
+            padding: 1px 8px;
+            font-size: 0.78rem;
+            color: var(--muted);
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        .status.done {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+        .post-body table td:last-child {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="topbar frame" aria-label="Site">
+        <a href="../../"><span class="brand-name">Senkang Forest Hu · </span>Blog</a>
+        <div class="right">
+            <a class="back" href="../../">&larr; All posts</a>
+            <button class="theme-toggle" type="button" aria-label="Switch between light and dark theme">
+                <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4.5"></circle>
+                    <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"></path>
+                </svg>
+                <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="progress" aria-hidden="true"></div>
+    </nav>
+
+    <article>
+        <header class="hero frame">
+            <div class="category">LLM Training</div>
+            <h1>Smol 训练手册：构建世界级大语言模型的秘诀</h1>
+            <p class="lede">一次贯穿挑战、决策与混乱现实的实践之旅，讲述如何训练最先进的语言模型。</p>
+        </header>
+
+        <div class="meta frame">
+            <dl>
+                <dt>原作者</dt>
+                <dd>Loubna Ben Allal 等 12 人，Hugging Face</dd>
+            </dl>
+            <dl>
+                <dt>原文发布</dt>
+                <dd>Oct. 30, 2025</dd>
+            </dl>
+            <dl>
+                <dt>译本整理</dt>
+                <dd>Senkang Forest Hu</dd>
+            </dl>
+            <dl>
+                <dt>Topic</dt>
+                <dd>LLM Training</dd>
+            </dl>
+            <dl>
+                <dt>Length</dt>
+                <dd data-reading-time></dd>
+            </dl>
+        </div>
+
+        <div class="layout">
+            <nav class="toc" aria-label="Contents">
+                <p class="toc-title">Contents</p>
+                <ol data-toc></ol>
+            </nav>
+
+            <div class="post-body">
+                <details class="toc-inline">
+                    <summary>Contents</summary>
+                    <ol data-toc></ol>
+                </details>
+
+                <div class="note">
+                    <p><b>关于这个译本。</b>本页是 Hugging Face <a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">The Smol Training Playbook: The Secrets to Building World-Class LLMs</a> 的简体中文全译本，按章节分批更新。目前已译完引言、如何阅读本指南和训练指南针全章，其余部分按「预训练 → 后训练 → 基础设施 → 结语」的顺序补齐。原文含大量交互图表、动画与实验数据，本页暂以文字为主，图表请对照原文阅读。</p>
+                    <p>原文由 Loubna Ben Allal、Lewis Tunstall、Nouamane Tazi、Elie Bakouch、Ed Beeching、Carlos Miguel Patiño、Clémentine Fourrier、Thibaud Frere、Anton Lozhkov、Colin Raffel、Leandro von Werra、Thomas Wolf（Hugging Face）撰写，2025 年 10 月 30 日发布，<a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">原文链接</a>。原文仓库以 <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> 许可发布（<a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook/blob/main/LICENSE">LICENSE</a>），版权归原作者所有。本页为该文的简体中文改编版，保留原作者署名与原文链接，并注明已作翻译、分章节选以及交互图表省略。转载或二次使用请遵循原文许可条款。</p>
+                </div>
+
+                <h2 id="roadmap">全书章节地图</h2>
+                <p>原书正文约 6.7 万词、214 页，分为四大板块。下表记录翻译进度，未完成的章节可先读原文。</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>板块</th>
+                                <th>章节</th>
+                                <th>状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>开篇</td><td><a href="#introduction">引言</a>、<a href="#how-to-read">如何阅读本指南</a></td><td><span class="status done">已译</span></td></tr>
+                            <tr><td>开篇</td><td><a href="#training-compass">训练指南针：为什么 → 做什么 → 怎么做</a></td><td><span class="status done">已译</span></td></tr>
+                            <tr><td>预训练</td><td><a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">每个大模型都始于一次小规模消融</a>：基线选择、训练框架、消融配置</td><td><span class="status">待译</span></td></tr>
+                            <tr><td>预训练</td><td><a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">设计模型架构</a>：架构选择、优化器与超参数、缩放定律</td><td><span class="status">待译</span></td></tr>
+                            <tr><td>预训练</td><td><a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">数据整理的艺术</a>：数据配比、系统性测试、SmolLM3 的数据混合</td><td><span class="status">待译</span></td></tr>
+                            <tr><td>预训练</td><td><a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">训练马拉松</a>：起飞前检查、规模化的意外、中期训练</td><td><span class="status">待译</span></td></tr>
+                            <tr><td>后训练</td><td><a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">超越基座模型：2025 年的后训练</a>：评估先行、SFT、偏好优化、GRPO、模型合并</td><td><span class="status">待译</span></td></tr>
+                            <tr><td>基础设施</td><td><a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">基础设施：无名英雄</a>：GPU 内部、GPU 之间、弹性训练系统、吞吐优化</td><td><span class="status">待译</span></td></tr>
+                            <tr><td>收尾</td><td><a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">结语、接下来做什么、参考文献</a></td><td><span class="status">待译</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2 id="introduction">引言</h2>
+                <p>今天，训练一个高性能的大语言模型究竟需要什么？</p>
+                <p><span class="status">阅读时间：2 到 4 天</span></p>
+                <p>已发表的研究把这件事写得很直白：选好架构，精心整理数据，算力给够，结果自然漂亮。论文里的结果光鲜，消融实验条理清晰，事后回看，每个决策都显得理所当然。但这些报告只呈现了奏效的部分，还带上一层美化的滤镜。它们不会写凌晨两点还在调试数据加载器的时刻，不会写突然飙升的损失曲线，也不会写某个隐蔽的张量并行 bug 如何悄悄拖垮整次训练（后文会讲到）。真实情况要混乱得多，充满反复试错，以及大量最终没有写进论文的决策。</p>
+                <p>接下来，我们要带你走到 <a href="https://huggingface.co/HuggingFaceTB/SmolLM3-3B">SmolLM3</a> 训练的幕后。这是一个在 11T tokens 上训练出来的 30 亿参数多语言推理模型。这不是一份普通指南，而是把一张由决策、发现和死胡同织成的蛛网逐一拆开，从中提炼出「造出世界级语言模型到底靠什么」的洞察。</p>
+                <p>它也是我们长篇模型训练系列的收官之作。此前我们讲过如何构建大规模数据集（<a href="https://huggingface.co/spaces/HuggingFaceFW/blogpost-fineweb-v1">FineWeb</a>）、如何让数千张 GPU 协同工作（<a href="https://huggingface.co/spaces/nanotron/ultrascale-playbook">The Ultra-Scale Playbook</a>）、以及如何在每个环节选对评估（<a href="https://github.com/huggingface/evaluation-guidebook">The LLM Evaluation Guidebook</a>）。现在我们把这些拼起来，真正训出一个强模型。你会看到完整过程，不只是最后奏效的配方，还有那些塑造了每个决策的失败、基础设施故障和调试过程。你会看到小规模消融里很有希望的结果为何无法迁移到大规模，我们为什么在训练到 1T tokens 后重启了一次，我们如何在多语言、数学和代码之间权衡，同时保持强劲的英文表现，以及最后如何做出一个混合推理模型。</p>
+                <p>我们不想简单罗列做过的每件事，而是把这段经历讲成一个有组织的故事。如果你正从「我们有很好的数据和 GPU」走向「我们训出了一个很强的模型」，这份指南就是写给你的。希望这样的坦诚能缩小研究与生产之间的鸿沟，让你的下一次训练少一点混乱。</p>
+
+                <h3 id="how-to-read">如何阅读本指南</h3>
+                <p>你不必从头读到尾，而且以它现在的篇幅，一口气读完本来也不现实。全书分成几个相对独立的部分，任意一部分都可以跳过或单独阅读：</p>
+                <ul>
+                    <li><b>训练指南针：</b>从高层讨论你是否应该自己预训练一个模型。在烧掉投资人的钱之前，我们会带你过一遍必须自问的根本问题，并给出系统化的决策思路。这部分偏战略，想直接看技术内容可以放心跳过。</li>
+                    <li><b>预训练：</b>训练指南针之后的部分覆盖构建一份可靠预训练配方所需的全部内容：如何做消融、如何选评估、如何混合数据源、如何做架构选择、如何调超参数，以及如何熬过训练马拉松。即使你不打算从零预训练，只要关心持续预训练（也叫中期训练），这部分同样有用。</li>
+                    <li><b>后训练：</b>这一部分讲如何让预训练模型发挥全部潜力。我们会走完整个后训练字母表，从 SFT、DPO 到 GRPO，以及模型合并这类带点玄学的手艺。让这些算法真正起作用的经验，大多是踩坑换来的，我们希望写下来能替你省掉一些。</li>
+                    <li><b>基础设施：</b>如果预训练是蛋糕，后训练是糖霜和樱桃，那基础设施就是工业级烤箱。没有它什么都做不出来，它一坏，你周日下午愉快的烘焙就变成火灾隐患。如何理解、分析和调试 GPU 集群的知识，零散分布在各种库、文档和论坛里。这一部分讲 GPU 布局、CPU 与 GPU、节点与存储之间的通信模式，以及如何定位并消除瓶颈。</li>
+                </ul>
+                <p>那么从哪里开始？挑一个最让你兴奋的部分，出发吧。</p>
+                <div class="note">
+                    <p>有问题或想法，欢迎到原文的 <a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook/discussions">Community 讨论区</a> 开一个讨论。</p>
+                </div>
+
+                <h2 id="training-compass">训练指南针：为什么 → 做什么 → 怎么做</h2>
+                <p>机器学习领域对「优化」有一种近乎执念的迷恋。我们盯着损失曲线、模型架构和吞吐量，毕竟机器学习的本质就是优化模型的损失函数。但在扎进这些技术细节之前，有一个更根本的问题常常没人问：<i>我们到底该不该训这个模型？</i></p>
+                <p>看看后面的模型发布热力图就知道，开源 AI 生态几乎每天都在放出世界级模型：Qwen、Gemma、DeepSeek、Kimi、Llama 🪦、OLMo，这份名单每个月都在变长。它们不是研究原型或玩具示例，而是覆盖多语言理解、代码生成、推理等广泛场景的生产级模型，多数还带着宽松许可证和活跃的社区支持。</p>
+                <p>于是有了一个让人不太舒服的结论：也许<i>你并不需要训练自己的模型</i>。</p>
+                <p>用这句话给一份「LLM 训练指南」开篇看着有点怪。但很多失败的训练项目并不是败在超参数或代码 bug 上，而是败在有人决定去训一个根本不需要的模型。所以在投入训练、研究<i>怎么做</i>之前，你得先回答两个问题：<i>为什么</i>要训这个模型？该训<i>什么样</i>的模型？没有清晰答案，你可能浪费几个月算力和工程时间，造出一个世界上已经有了的东西，甚至是一个没人需要的东西。</p>
+                <p>先从<i>为什么</i>开始。不明确目的，后面任何决策都无法自洽。</p>
+                <div class="note">
+                    <p><b>📍 关于这一节。</b>这一节和全书其余部分不太一样，重点不在实验和技术细节，而在战略规划。我们会带你判断<b>是否需要从零训练，以及要造一个什么模型</b>。如果你已经把「为什么」和「做什么」想清楚了，可以直接跳到原文「Every Big Model Starts with a Small Ablation」看技术细节。如果还不确定，在这里多花点时间很可能在后面省下大量力气。</p>
+                </div>
+
+                <h3 id="why">为什么：那个没人愿意回答的问题</h3>
+                <p>直说实际会发生什么。某人（运气不错）拿到了一个 GPU 集群，可能来自科研经费，也可能是公司闲置算力，然后思路大致是这样的：「我们有 100 张 H100，能用三个月，训个模型吧！」模型规模随手一拍，数据集把手头能找到的凑一凑，训练就这么开始了。六个月后，算力预算和团队士气都烧得差不多了，训出来的模型没人用，因为从头到尾没人问过<i>为什么</i>。</p>
+                <p>以下是若干「不该训模型」的理由。被「我们训出了自己的模型」这句话吸引很正常，但在投入大量时间和资源之前，值得先问一句：<b>我们为什么需要训这个模型？</b></p>
+                <p>下面这张决策流程图梳理了启动大型预训练项目前应该走一遍的思考过程。从技术角度看，你首先应该确认的是：有没有一个现成模型，靠提示词或者微调就能把活干了。</p>
+                <p>顺带说明：这里讨论的「为什么」特指从零训练。本指南不讲蒸馏和剪枝，它们同样是造出高效模型的有效路径，但工作流与从零训练不同。想概览这些主题，推荐 NVIDIA 的 <a href="https://arxiv.org/abs/2408.11796">Minitron 论文</a>。</p>
+                <p>定制预训练真正说得通的场景基本只有三类：你想做新颖的研究、你的生产场景有非常特殊的需求、或者你想填补开源模型生态里的一块空白。下面分别看。</p>
+
+                <h4>研究：你到底想弄明白什么？</h4>
+                <p>LLM 领域可做的研究很多，共同点是通常从一个定义清晰的问题出发：</p>
+                <ul>
+                    <li>能不能把这个新优化器的训练扩展到 10B 以上规模的模型？（见 <a href="https://huggingface.co/papers/2502.16982">Muon is Scalable for LLM Training</a>）</li>
+                    <li>只用强化学习、不用监督微调（SFT），能不能产生推理能力？（见 <a href="https://huggingface.co/papers/2501.12948">DeepSeek-R1</a>）</li>
+                    <li>只用合成的教科书数据，能不能训出好的小模型？（见 <a href="https://huggingface.co/papers/2306.11644">Textbooks Are All You Need</a>）</li>
+                    <li>只用开放许可的数据训练，能不能达到有竞争力的表现？（见 <a href="https://huggingface.co/papers/2506.05209">The Common Pile v0.1</a>）</li>
+                </ul>
+                <p>把假设写得越具体越好，同时想清楚实验所需的规模，成功的概率会明显提高。</p>
+
+                <h4>生产：为什么不能用现成模型？</h4>
+                <p>公司无法直接拿现成模型来用，主要有三类原因，两类是技术性的，一类来自治理要求。</p>
+                <p>第一个理由是<b>领域特殊性</b>：你的数据或任务涉及高度专业的词汇或结构，现有模型处理不好。比如你可能想训：</p>
+                <ul>
+                    <li>一个词表独特、且有长程依赖的 DNA 模型</li>
+                    <li>一个需要深度熟悉领域术语与逻辑的法律或金融模型</li>
+                </ul>
+                <p>第二个与之相关，是<b>部署约束</b>：你需要一个贴合自家硬件、延迟或隐私要求的模型。例如跑在无人机上的 LLM，或者部署在 FPGA 等定制硬件上的本地系统。</p>
+                <p>有个简单的检验方法：花几天时间，基于 Qwen3、Gemma 3 或其他当前 SOTA 模型做一版，看看靠提示词、工具调用或后训练能不能达到性能目标。如果不行，大概就该自己训了。</p>
+                <p>即便满足需求所需的后训练预算很大，它仍可能比从零开始便宜。用 1T tokens 微调自己的模型，比从零训 10T+ tokens 经济得多。写到这里，做 LLM 训练的人会神奇地开始把它叫「中期训练」，而不是「后训练」。</p>
+                <p>第三个理由是<b>安全与治理</b>：你身处受监管行业或高风险应用，需要对训练数据、模型行为和更新周期有完全控制，必须确切知道模型里进了什么，并且能向监管方证明。某些情况下，除了自研别无选择。</p>
+                <p>这些是公司自研模型的主要原因。那么发布开源模型的公司或组织又是为什么？</p>
+
+                <h4>战略开源：你看到了一块能补上的空白吗？</h4>
+                <p>经验丰富的 AI 实验室发布新开源模型，最常见的原因之一，是他们在开源生态里识别出了一块具体空白，或一个新的 AI 使用场景。</p>
+                <p>套路通常是这样：你注意到一个尚未被充分探索的方向，比如没有长上下文很强的端侧模型，或者多语言模型虽然有了，但在低资源语言上很弱，又或者领域正在转向 <a href="https://deepmind.google/discover/blog/genie-3-a-new-frontier-for-world-models/">Genie 3</a> 那样的交互式世界模型，而市面上没有好的开放权重模型。</p>
+                <p>你有理由相信自己能做得更好，也许是因为整理出了更好的训练数据、打磨出了更好的训练配方，或者有算力支撑别人做不到的过度训练。你的目标很具体，不是「史上最好的模型」，而是「端侧最好用的 3B 模型」或者「第一个支持 1M token 上下文的小模型」。</p>
+                <p>这是个实在的目标，成了就有价值：开发者采用你的模型，它变成别人的基础设施，或者为你建立技术信誉。但成功需要经验，你得知道什么真的可行，以及在一个竞争激烈的领域里如何稳定交付。为了讲具体些，看看 Hugging Face 自己怎么想这个问题。</p>
+
+                <h4>Hugging Face 走过的路</h4>
+                <p>Hugging Face 为什么要训开放模型？答案很简单：我们做对开源生态有用的东西，补上很少有人补的空白。</p>
+                <p>虽然开放权重模型有数百万个，但训练「完全开放」模型的组织非常少。除了 Hugging Face，还有 <a href="https://allenai.org/">Ai2</a> 和 <a href="https://marin.community/">斯坦福的 Marin 社区</a>。</p>
+                <p>这里既包括数据集、工具链，也包括训练模型本身。我们启动的每一个 LLM 训练项目，都始于「注意到一块空白，并相信我们能在其中做出有意义的贡献」。</p>
+                <p>第一个 LLM 项目始于 GPT-3 发布之后。当时感觉没有别人在做开放替代方案，我们担心这些知识最终被锁在少数几家工业实验室里，于是发起 <a href="https://bigscience.huggingface.co/">BigScience workshop</a>，训练开放版本的 GPT-3。成果是 <a href="https://huggingface.co/bigscience/bloom">BLOOM</a>，由数十位贡献者用一年时间搭建训练栈、分词器和预训练语料，最终预训练出一个 175B 参数模型。</p>
+                <p>BLOOM 的继任者是 2022 年的 StarCoder。OpenAI 为 GitHub Copilot 开发了 Codex，但它是闭源的，做一个开源替代显然对生态有价值。于是我们在 <a href="https://huggingface.co/bigcode">BigCode</a> 框架下与 ServiceNow 合作，构建了 <a href="https://huggingface.co/datasets/bigcode/the-stack">The Stack</a> 数据集，并训练 <a href="https://huggingface.co/bigcode/starcoder">StarCoder 15B</a> 来复现 Codex。<a href="https://huggingface.co/collections/bigcode/starcoder2-65de6da6e87db3383572be1a">StarCoder2</a> 则来自两条经验：我们本可以训得更久，以及「小模型训更久」可能比「一个大模型」更有价值。我们训了一个 3B / 7B / 15B 的系列，每个都用数万亿 tokens，远超当时开放代码模型的做法。</p>
+                <p><a href="https://huggingface.co/HuggingFaceTB">SmolLM 系列</a>沿用了同样的思路。我们注意到强的小型模型非常少，而当时刚做完 <a href="https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu">FineWeb-Edu</a> 这个很强的预训练数据集。<a href="https://huggingface.co/collections/HuggingFaceTB/smollm-6695016cad7167254ce15966">SmolLM</a>（135M / 360M / 1.7B）是第一版，<a href="https://huggingface.co/collections/HuggingFaceTB/smollm2-6723884218bcda64b34d7db9">SmolLM2</a> 聚焦更好的数据和更长的训练，在多个维度达到 SOTA，<a href="https://huggingface.co/HuggingFaceTB/SmolLM3-3B">SmolLM3</a> 则扩展到 3B 参数，同时加入混合推理、多语言和长上下文这些社区在意的特性。</p>
+                <p>这个模式也延伸到预训练之外：我们训练 <a href="https://huggingface.co/HuggingFaceH4/zephyr-7b-alpha">Zephyr</a> 来证明 DPO 在大规模上可行，发起 <a href="https://github.com/huggingface/open-r1">Open-R1</a> 复现 DeepSeek-R1 的蒸馏流程，发布面向竞赛编程的 <a href="https://huggingface.co/open-r1/OlympicCoder-7B">OlympicCoder</a>，在国际信息学奥赛题目上达到 SOTA。我们还用 <a href="https://huggingface.co/collections/HuggingFaceTB/smolvlm-6740bd584b2dcbf51ecb1f39">SmolVLM</a> 探索视觉、用 <a href="https://huggingface.co/lerobot/smolvla_base">SmolVLA</a> 探索机器人等其他模态。想了解 Hugging Face 的科学项目全貌，可以看 <a href="https://huggingface.co/science">huggingface.co/science</a>。</p>
+                <p>希望这一节已经说服你：认真想清楚「为什么要训模型」是有价值的。本指南余下部分，我们默认你已经做完这番自省，并且有一个站得住脚的理由。</p>
+
+                <h3 id="what">做什么：把目标翻译成决策</h3>
+                <p>知道了<i>为什么</i>训，接下来该训<i>什么</i>？这里的「什么」指模型类型（稠密、混合专家、混合架构，或者全新的东西）、模型规模、架构细节和数据配比。一旦把「为什么」定下来，「做什么」就可以从中推出来。比如：</p>
+                <ul>
+                    <li>端侧要快 → 小而高效的模型</li>
+                    <li>多语言模型 → 更大的分词器词表</li>
+                    <li>超长上下文 → 混合架构</li>
+                </ul>
+                <p>除了由使用场景驱动的决策，还有一些选择是为了优化训练本身：更稳定、样本效率更高，或者更快。这些决策不一定那么非黑即白，但可以把决策过程大致拆成两个阶段：</p>
+                <ul>
+                    <li><b>规划：</b>跑实验之前，把使用场景映射到需要拍板的各个组件上。部署环境决定模型规模约束，时间线决定你能承担哪些架构风险，目标能力决定数据集要求。这个阶段要做的是，把「为什么」里的每条约束，连接到「做什么」里的具体规格。</li>
+                    <li><b>验证：</b>有了起点和一份候选改动清单之后，系统地做测试。测试很贵，所以聚焦在那些可能切实改善你的场景表现、或优化训练本身的改动上。这就是「Every Big Model Starts with a Small Ablation」里讲的消融实验。</li>
+                </ul>
+                <div class="note">
+                    <p><b>📍 学会判断什么值得测，而不只是会跑测试。</b>在无关选择上做完美消融，浪费的算力和在重要选择上做粗糙消融一样多。</p>
+                </div>
+                <p>后面的章节会讲到定义模型时可选的所有方案，以及如何用系统性实验把范围收窄。在此之前，我们先分享几条关于团队与项目组织的经验，来自我们自己训模型，以及观察其他优秀团队打造强 LLM 的过程。</p>
+
+                <h3 id="speed-and-data">超能力：迭代速度与数据</h3>
+                <p>条条大路通罗马，但我们发现，真正把成功的 LLM 训练团队区分出来的是<i>迭代速度</i>。训 LLM 本质上是一门边做边学的手艺：训得越频繁，团队进步越快。所以，一年训一个模型的团队和一季度训一个的团队相比，后者成长会快得多。看看 Qwen 和 DeepSeek 的团队就明白了，如今家喻户晓的它们，长期保持稳定且高频的模型发布节奏。</p>
+                <p>除迭代速度之外，对 LLM 训练影响最大的因素是<i>数据整理</i>。人天然倾向于一头扎进架构选择里改进模型，但真正擅长的团队，对高质量数据的执念超过其他一切。</p>
+                <p>还有一个与迭代速度相关的因素是<i>团队规模</i>。就主要的预训练任务而言，只需要少数几个人配上足够算力就能执行。今天要预训练一个 Llama 3 量级的模型，大概两三个人就够。等到涉足更多样的训练和下游任务（多模态、多语言、后训练等），才需要为每个领域补充几位专精的人。</p>
+                <p>所以，从一个小而装备精良的团队起步，每两三个月训一个新模型，用不了多久你就能爬到顶部。本指南剩下的部分，就聚焦这个团队日常的技术工作。</p>
+
+                <h2 id="next-chapter">每个大模型都始于一次小规模消融</h2>
+                <div class="note">
+                    <p>本章及之后章节正在翻译中。当前可先阅读<a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">英文原文</a>，或在上方章节地图查看后续板块的翻译进度。</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="post-footer frame">
+            <!-- data-base is the path from this page to the blog root. -->
+            <nav class="post-nav" data-base="../../" aria-label="More posts"></nav>
+            <p class="credit">&copy; Senkang Forest Hu. <a href="../../">Back to all posts</a></p>
+        </footer>
+    </article>
+</body>
+
+</html>
