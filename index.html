@@ -8,235 +8,284 @@
     <meta name="description" content="Notes, translations and paper write-ups by Senkang Forest Hu.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="icon"
         href="data:image/svg+xml, <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☯️</text></svg>">
+    <!-- Colours, the header bar and the theme switch are shared with the posts. -->
+    <link rel="stylesheet" href="assets/post.css">
+    <script src="assets/post.js"></script>
     <style>
         :root {
-            --bg: #ffffff;
-            --text: #2c3e50;
-            --muted: #6c757d;
-            --line: #e9ecef;
-            --accent: #2563eb;
-            --accent-soft: rgba(37, 99, 235, 0.1);
+            --frame: 780px;
         }
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #12151c;
-                --text: #e6e9ef;
-                --muted: #9aa3b2;
-                --line: #262b36;
-                --accent: #7aa2ff;
-                --accent-soft: rgba(122, 162, 255, 0.14);
-            }
+        .intro {
+            padding-top: 72px;
+            padding-bottom: 36px;
         }
 
-        * {
-            box-sizing: border-box;
+        .intro h1 {
+            margin: 0 0 12px;
+            font-size: clamp(2.4rem, 7vw, 3.2rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
         }
 
-        body {
+        .intro p {
             margin: 0;
-            background: var(--bg);
+            max-width: 32em;
+            color: var(--muted);
+        }
+
+        /* Search and topic filters */
+        .search {
+            position: relative;
+        }
+
+        .search input {
+            width: 100%;
+            padding: 10px 44px 10px 0;
+            font: inherit;
             color: var(--text);
-            font-family: 'Montserrat', -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
-            line-height: 1.6;
+            background: transparent;
+            border: 0;
+            border-bottom: 1px solid var(--line);
+            border-radius: 0;
+            outline: none;
         }
 
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .wrap {
-            max-width: 760px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 22px 0;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .topbar a:hover,
-        .post a.post-title:hover {
-            color: var(--accent);
-        }
-
-        .topbar .home {
+        .search input::placeholder {
             color: var(--muted);
         }
 
-        header.intro {
-            padding: 56px 0 28px;
+        .search input:focus {
+            border-bottom-color: var(--accent);
         }
 
-        header.intro h1 {
-            margin: 0 0 10px;
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: clamp(2.2rem, 6vw, 3rem);
-            line-height: 1.15;
-        }
-
-        header.intro p {
-            margin: 0;
+        .search kbd {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 1px 7px;
+            font: inherit;
+            font-size: 0.75rem;
             color: var(--muted);
-            max-width: 34em;
+            border: 1px solid var(--line);
+            border-radius: 5px;
+            pointer-events: none;
+        }
+
+        .search input:focus + kbd {
+            display: none;
         }
 
         .filters {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            padding: 8px 0 20px;
+            gap: 4px 18px;
+            padding-top: 16px;
+            font-size: 0.88rem;
         }
 
         .filters button {
+            padding: 4px 0;
             font: inherit;
-            font-size: 0.85rem;
-            font-weight: 600;
             color: var(--muted);
-            background: transparent;
-            border: 1px solid var(--line);
-            border-radius: 999px;
-            padding: 6px 14px;
+            background: none;
+            border: 0;
+            border-bottom: 1.5px solid transparent;
+            border-radius: 0;
             cursor: pointer;
         }
 
         .filters button:hover {
-            color: var(--accent);
+            color: var(--text);
         }
 
         .filters button[aria-pressed="true"] {
-            color: var(--accent);
-            background: var(--accent-soft);
-            border-color: transparent;
+            color: var(--text);
+            font-weight: 600;
+            border-bottom-color: var(--accent);
         }
 
-        .filters button:focus-visible,
-        a:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 3px;
+        .filters .count {
+            margin-left: 4px;
+            font-size: 0.78em;
+            font-weight: 400;
+            color: var(--muted);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Post list */
+        .list {
+            padding-top: 20px;
+            padding-bottom: 24px;
+            min-height: 40vh;
         }
 
         .year {
-            margin: 28px 0 0;
+            margin: 36px 0 6px;
             padding-bottom: 8px;
             border-bottom: 1px solid var(--line);
-            font-size: 0.85rem;
-            font-weight: 700;
+            font-size: 0.8rem;
+            font-weight: 600;
             color: var(--muted);
-            letter-spacing: 0.04em;
+            font-variant-numeric: tabular-nums;
         }
 
         .post {
             display: grid;
-            grid-template-columns: 96px 1fr;
-            gap: 16px;
-            padding: 20px 0;
-            border-bottom: 1px solid var(--line);
+            grid-template-columns: 52px minmax(0, 1fr);
+            column-gap: 20px;
+            padding: 16px 0;
         }
 
         .post-date {
+            padding-top: 3px;
             font-size: 0.85rem;
             color: var(--muted);
-            padding-top: 3px;
         }
 
-        .post a.post-title {
-            font-size: 1.1rem;
+        .post-title {
+            font-size: 1.08rem;
             font-weight: 600;
             line-height: 1.4;
+            color: var(--text);
         }
 
-        .post .ext {
+        .post-title:hover {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .post-title .ext {
+            margin-left: 4px;
             font-size: 0.8em;
+            font-weight: 400;
             color: var(--muted);
         }
 
         .post p {
-            margin: 6px 0 10px;
+            margin: 4px 0 6px;
+            font-size: 0.94rem;
+            line-height: 1.55;
             color: var(--muted);
-            font-size: 0.95rem;
         }
 
-        .meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px 12px;
+        .post-meta {
             font-size: 0.8rem;
-        }
-
-        .meta .type {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .meta .tag {
             color: var(--muted);
+        }
+
+        .post-meta button {
+            padding: 0;
+            font: inherit;
+            color: var(--accent);
+            background: none;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .post-meta button:hover {
+            text-decoration: underline;
         }
 
         .empty {
-            padding: 40px 0;
+            padding: 48px 0;
             color: var(--muted);
         }
 
-        footer {
-            padding: 40px 0 56px;
+        .empty button {
+            padding: 0;
+            font: inherit;
+            color: var(--accent);
+            background: none;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .site-footer {
+            padding-top: 24px;
+            padding-bottom: 56px;
+            border-top: 1px solid var(--line);
             font-size: 0.85rem;
             color: var(--muted);
         }
 
         @media (max-width: 560px) {
-            .post {
-                grid-template-columns: 1fr;
-                gap: 4px;
+            .intro {
+                padding-top: 44px;
+                padding-bottom: 28px;
             }
 
-            header.intro {
-                padding-top: 32px;
+            .post {
+                grid-template-columns: 1fr;
+            }
+
+            .post-date {
+                padding: 0 0 2px;
+                font-size: 0.8rem;
+            }
+
+            .search kbd {
+                display: none;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="wrap">
-        <nav class="topbar" aria-label="Site">
-            <a href="./">Senkang Forest Hu · Blog</a>
-            <a class="home" href="https://dl-m9.github.io/">Homepage &rarr;</a>
-        </nav>
+    <nav class="topbar frame" aria-label="Site">
+        <a href="./"><span class="brand-name">Senkang Forest Hu · </span>Blog</a>
+        <div class="right">
+            <a class="back" href="https://dl-m9.github.io/">Homepage &rarr;</a>
+            <button class="theme-toggle" type="button" aria-label="Switch between light and dark theme">
+                <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4.5"></circle>
+                    <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"></path>
+                </svg>
+                <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
 
-        <header class="intro">
-            <h1>Blog</h1>
-            <p>Notes, translations and paper write-ups on LLM agents, agentic RL and model training.</p>
-        </header>
+    <header class="intro frame">
+        <h1>Blog</h1>
+        <p>Notes, translations and paper write-ups on LLM agents, agentic RL and model training.</p>
+    </header>
 
+    <div class="frame">
+        <div class="search">
+            <input id="search" type="search" placeholder="Search posts" aria-label="Search posts" autocomplete="off">
+            <kbd>/</kbd>
+        </div>
         <div class="filters" id="filters" role="group" aria-label="Filter posts by topic"></div>
-
-        <main id="posts" aria-live="polite">
-            <noscript>
-                <p class="empty">This page needs JavaScript to list the posts.</p>
-            </noscript>
-        </main>
-
-        <footer>
-            &copy; Senkang Forest Hu. Each post keeps its own license and credits.
-        </footer>
     </div>
+
+    <main class="list frame" id="posts" aria-live="polite">
+        <noscript>
+            <p class="empty">This page needs JavaScript to list the posts.</p>
+        </noscript>
+    </main>
+
+    <footer class="site-footer frame">
+        &copy; Senkang Forest Hu. Each post keeps its own license and credits.
+    </footer>
 
     <script>
         (function () {
             const list = document.getElementById('posts');
             const filters = document.getElementById('filters');
+            const search = document.getElementById('search');
+            const params = new URLSearchParams(window.location.search);
             let posts = [];
-            let active = 'All';
+            let topic = params.get('topic') || 'All';
+            let query = params.get('q') || '';
+            search.value = query;
 
             function el(tag, cls, text) {
                 const node = document.createElement(tag);
@@ -245,23 +294,57 @@
                 return node;
             }
 
+            // Keep the topic and search text in the address so a filtered view can be shared.
+            function syncUrl() {
+                const next = new URLSearchParams();
+                if (topic !== 'All') next.set('topic', topic);
+                if (query) next.set('q', query);
+                const qs = next.toString();
+                history.replaceState(null, '', qs ? '?' + qs : window.location.pathname);
+            }
+
+            function matchesQuery(p) {
+                if (!query) return true;
+                const hay = (p.title + ' ' + p.summary + ' ' + p.category + ' ' + p.type).toLowerCase();
+                return query.toLowerCase().split(/\s+/).every(function (word) { return hay.includes(word); });
+            }
+
+            function setTopic(next) {
+                topic = next;
+                syncUrl();
+                renderFilters();
+                render();
+            }
+
             function render() {
                 list.textContent = '';
-                const shown = posts.filter(p => active === 'All' || p.category === active);
+                const shown = posts.filter(function (p) {
+                    return (topic === 'All' || p.category === topic) && matchesQuery(p);
+                });
                 if (!shown.length) {
-                    list.appendChild(el('p', 'empty', 'No posts in this category yet.'));
+                    const empty = el('p', 'empty', 'No posts match. ');
+                    const reset = el('button', '', 'Show all posts');
+                    reset.type = 'button';
+                    reset.addEventListener('click', function () {
+                        query = '';
+                        search.value = '';
+                        setTopic('All');
+                    });
+                    empty.appendChild(reset);
+                    list.appendChild(empty);
                     return;
                 }
                 let year = '';
-                shown.forEach(p => {
-                    const y = p.date.split(' ').pop();
+                shown.forEach(function (p) {
+                    const parts = p.date.split(' ');
+                    const y = parts.pop();
                     if (y !== year) {
                         year = y;
                         list.appendChild(el('h2', 'year', y));
                     }
                     const external = /^https?:/.test(p.link);
                     const article = el('article', 'post');
-                    article.appendChild(el('div', 'post-date', p.date));
+                    article.appendChild(el('div', 'post-date', parts.join(' ')));
 
                     const body = el('div');
                     const title = el('a', 'post-title', p.title);
@@ -269,14 +352,19 @@
                     if (external) {
                         title.target = '_blank';
                         title.rel = 'noopener noreferrer';
-                        title.appendChild(el('span', 'ext', ' ↗'));
+                        const mark = el('span', 'ext', '↗');
+                        mark.setAttribute('aria-label', 'opens on another site');
+                        title.appendChild(mark);
                     }
                     body.appendChild(title);
                     body.appendChild(el('p', '', p.summary));
 
-                    const meta = el('div', 'meta');
-                    meta.appendChild(el('span', 'type', p.category));
-                    meta.appendChild(el('span', 'tag', p.type));
+                    const meta = el('div', 'post-meta');
+                    const tag = el('button', '', p.category);
+                    tag.type = 'button';
+                    tag.addEventListener('click', function () { setTopic(p.category); });
+                    meta.appendChild(tag);
+                    meta.appendChild(document.createTextNode(' · ' + p.type));
                     body.appendChild(meta);
 
                     article.appendChild(body);
@@ -285,29 +373,49 @@
             }
 
             function renderFilters() {
-                const types = ['All'].concat([...new Set(posts.map(p => p.category))]);
+                const counts = {};
+                posts.forEach(function (p) { counts[p.category] = (counts[p.category] || 0) + 1; });
+                const topics = ['All'].concat(Object.keys(counts));
+                if (!topics.includes(topic)) topic = 'All';
                 filters.textContent = '';
-                types.forEach(t => {
+                topics.forEach(function (t) {
                     const btn = el('button', '', t);
                     btn.type = 'button';
-                    btn.setAttribute('aria-pressed', String(t === active));
-                    btn.addEventListener('click', () => {
-                        active = t;
-                        renderFilters();
-                        render();
-                    });
+                    btn.setAttribute('aria-pressed', String(t === topic));
+                    btn.appendChild(el('span', 'count', String(t === 'All' ? posts.length : counts[t])));
+                    btn.addEventListener('click', function () { setTopic(t); });
                     filters.appendChild(btn);
                 });
             }
 
+            search.addEventListener('input', function () {
+                query = search.value.trim();
+                syncUrl();
+                render();
+            });
+
+            // "/" jumps to the search box, Escape clears it.
+            document.addEventListener('keydown', function (e) {
+                if (e.key === '/' && document.activeElement !== search && !e.metaKey && !e.ctrlKey) {
+                    e.preventDefault();
+                    search.focus();
+                } else if (e.key === 'Escape' && document.activeElement === search) {
+                    search.value = '';
+                    query = '';
+                    syncUrl();
+                    render();
+                    search.blur();
+                }
+            });
+
             fetch('posts.json')
-                .then(r => r.json())
-                .then(data => {
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
                     posts = data;
                     renderFilters();
                     render();
                 })
-                .catch(() => {
+                .catch(function () {
                     list.textContent = '';
                     list.appendChild(el('p', 'empty', 'Could not load the post list.'));
                 });

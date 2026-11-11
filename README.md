@@ -2,7 +2,7 @@
 
 Source of https://dl-m9.github.io/blog/, the blog of Senkang Forest Hu.
 
-- `index.html`: the blog index. It lists the posts in `posts.json`.
+- `index.html`: the blog index. It lists the posts in `posts.json`, with search and topic filters.
 - `posts.json`: one entry per post, newest first.
 - `posts/`: posts hosted on this site.
 - `assets/post.css` and `assets/post.js`: shared styles and behaviour for hosted posts.
