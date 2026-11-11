@@ -109,7 +109,7 @@
                 </details>
 
                 <div class="note">
-                    <p><b>关于这个译本。</b>本页是 Hugging Face <a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">The Smol Training Playbook: The Secrets to Building World-Class LLMs</a> 的简体中文全译本，按章节分批更新。目前已译完引言、如何阅读本指南和训练指南针全章，其余部分按「预训练 → 后训练 → 基础设施 → 结语」的顺序补齐。原文含大量交互图表、动画与实验数据，本页暂以文字为主，图表请对照原文阅读。</p>
+                    <p><b>关于这个译本。</b>本页是 Hugging Face <a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">The Smol Training Playbook: The Secrets to Building World-Class LLMs</a> 的简体中文全译本，按章节分批更新。目前已译完引言、如何阅读本指南、训练指南针全章，以及「每个大模型都始于一次小规模消融」全章，其余部分按「设计模型架构 → 数据整理 → 训练马拉松 → 后训练 → 基础设施 → 结语」的顺序补齐。原文含大量交互图表、动画与实验数据，本页暂以文字为主，图表请对照原文阅读。</p>
                     <p>原文由 Loubna Ben Allal、Lewis Tunstall、Nouamane Tazi、Elie Bakouch、Ed Beeching、Carlos Miguel Patiño、Clémentine Fourrier、Thibaud Frere、Anton Lozhkov、Colin Raffel、Leandro von Werra、Thomas Wolf（Hugging Face）撰写，2025 年 10 月 30 日发布，<a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">原文链接</a>。原文仓库以 <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> 许可发布（<a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook/blob/main/LICENSE">LICENSE</a>），版权归原作者所有。本页为该文的简体中文改编版，保留原作者署名与原文链接，并注明已作翻译、分章节选以及交互图表省略。转载或二次使用请遵循原文许可条款。</p>
                 </div>
 
@@ -127,7 +127,7 @@
                         <tbody>
                             <tr><td>开篇</td><td><a href="#introduction">引言</a>、<a href="#how-to-read">如何阅读本指南</a></td><td><span class="status done">已译</span></td></tr>
                             <tr><td>开篇</td><td><a href="#training-compass">训练指南针：为什么 → 做什么 → 怎么做</a></td><td><span class="status done">已译</span></td></tr>
-                            <tr><td>预训练</td><td><a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">每个大模型都始于一次小规模消融</a>：基线选择、训练框架、消融配置</td><td><span class="status">待译</span></td></tr>
+                            <tr><td>预训练</td><td><a href="#small-ablation">每个大模型都始于一次小规模消融</a>：基线选择、训练框架、消融配置</td><td><span class="status done">已译</span></td></tr>
                             <tr><td>预训练</td><td><a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">设计模型架构</a>：架构选择、优化器与超参数、缩放定律</td><td><span class="status">待译</span></td></tr>
                             <tr><td>预训练</td><td><a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">数据整理的艺术</a>：数据配比、系统性测试、SmolLM3 的数据混合</td><td><span class="status">待译</span></td></tr>
                             <tr><td>预训练</td><td><a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">训练马拉松</a>：起飞前检查、规模化的意外、中期训练</td><td><span class="status">待译</span></td></tr>
@@ -238,7 +238,293 @@
                 <p>还有一个与迭代速度相关的因素是<i>团队规模</i>。就主要的预训练任务而言，只需要少数几个人配上足够算力就能执行。今天要预训练一个 Llama 3 量级的模型，大概两三个人就够。等到涉足更多样的训练和下游任务（多模态、多语言、后训练等），才需要为每个领域补充几位专精的人。</p>
                 <p>所以，从一个小而装备精良的团队起步，每两三个月训一个新模型，用不了多久你就能爬到顶部。本指南剩下的部分，就聚焦这个团队日常的技术工作。</p>
 
-                <h2 id="next-chapter">每个大模型都始于一次小规模消融</h2>
+                <h2 id="small-ablation">每个大模型都始于一次小规模消融</h2>
+                <p>在真正开始训练 LLM 之前，我们要做很多决定，它们会塑造模型的表现和训练效率。哪种架构最适合自己的场景？该用什么优化器和学习率调度？数据源又要怎么混？</p>
+                <p>「这些决定是怎么做出来的」是个高频问题。有人以为靠深思熟虑就够了。战略思考当然必不可少（上一节讲过），但光靠推理并不够。LLM 并不总是符合直觉，关于「什么应该奏效」的假设，实践里常常落空。</p>
+                <p>比如，用看起来「质量最高的数据」不一定训出更强的模型。以 <a href="https://arxiv.org/">arXiv</a> 为例，它汇集了人类海量的科学知识。直觉上，拿这么丰富的 STEM 数据训练，模型应该更强，对吧？实际上并不会，对小模型甚至可能伤害表现。原因在哪？arXiv 论文确实充满知识，但高度专业化，写作是狭窄的学术文体，和模型最擅长学习的多样、通用文本差别很大。</p>
+                <p>那么，盯着问题苦想没有用，怎么知道什么有效？像合格的经验主义者那样，做大量实验。机器学习不是纯数学，它其实非常是一门实验科学。</p>
+                <div class="note">
+                    <p>在很多方面，机器学习像统计力学被发现之前的热力学：我们有可靠的经验规律和设计原则，效果出奇地好，尽管更深层的理论解释仍在形成中。</p>
+                </div>
+                <p>这些实验会指导许多关键决策，因此把它们搭好非常重要。我们主要想要两个属性：</p>
+                <ol>
+                    <li><b>快：</b>跑得尽可能快，才能频繁迭代。消融做得越多，能检验的假设越多。</li>
+                    <li><b>可靠：</b>要有强区分能力。如果所看的指标在早期无法有效区分不同配置，消融可能什么也揭示不了。要是噪声还大，我们甚至会追着噪声跑。更多细节见我们把 FineWeb 扩展到 1000 多种语言的<a href="https://huggingface.co/spaces/HuggingFaceFW/blogpost-fine-tasks">博客文章</a>。</li>
+                </ol>
+                <p>不过在搭建消融之前，还得先对架构类型和模型规模做几个基础选择。这些由指南针引导的决定，会影响用哪个训练框架、算力预算怎么分配，以及从哪个基线起步。</p>
+                <p>SmolLM3 选的是 3B 参数的稠密 Llama 式架构，因为目标是端侧小模型。但正如后文「设计模型架构」会讲到的，混合专家（MoE）或混合架构也许更适合你的场景，不同模型规模也各有取舍。后面会深入探讨这些选择，并展示如何做决定。现在先从最实际的第一步开始：选基线。</p>
+
+                <h3 id="choosing-baseline">选择你的基线</h3>
+                <p>每个成功的模型都建立在一个经过验证的地基上，再按自身需求改造。Qwen 训练第一代模型族时从 Llama 架构起步，Meta 训练 Llama 3 时从 Llama 2 起步，Kimi K2 从 DeepSeek-V3 的 MoE 架构起步。这不只是架构，训练超参数和优化器也一样。</p>
+                <p>为什么？设计好的架构和训练配置，需要许多组织花数年迭代。标准 transformer 和 Adam 这类优化器，是数千次实验打磨出来的，人们已经找出了失效模式、调试过不稳定、优化过实现。从验证过的地基出发，等于继承所有这些积累。从零开始，意味着每个坑都要自己重新踩一遍。</p>
+                <p>一个好的起点架构应该：</p>
+                <ul>
+                    <li><b>匹配你的约束</b>，与部署目标和使用场景一致</li>
+                    <li><b>在目标规模上被验证过</b>，在同等或更大规模的万亿 token 级训练中跑通过</li>
+                    <li><b>文档完善</b>，有在开放模型上验证过可用的已知超参数</li>
+                    <li><b>框架支持良好</b>，最好同时被你考虑的训练框架和计划使用的推理框架支持</li>
+                </ul>
+                <p>下表列出撰写时（2026 年初）若干架构类型与规模下，2025 年较强的基线选项，并非穷尽：</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>架构类型</th><th>模型族</th><th>规模</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>稠密</td><td><a href="https://huggingface.co/collections/meta-llama/llama-31-669fc079a0c406a149a5738f">Llama 3.1</a></td><td>8B, 70B</td></tr>
+                            <tr><td>稠密</td><td><a href="https://huggingface.co/collections/meta-llama/llama-32-66f448ffc8c32f949b04c8cf">Llama 3.2</a></td><td>1B, 3B</td></tr>
+                            <tr><td>稠密</td><td><a href="https://huggingface.co/collections/Qwen/qwen3-67dd247413f0e2e4f653967f">Qwen3</a></td><td>0.6B, 1.7B, 4B, 14B, 32B</td></tr>
+                            <tr><td>稠密</td><td><a href="https://huggingface.co/collections/google/gemma-3-release-67c6c6f89c4f76621268bb6d">Gemma 3</a></td><td>12B, 27B</td></tr>
+                            <tr><td>稠密</td><td><a href="https://huggingface.co/collections/HuggingFaceTB/smollm2-6723884218bcda64b34d7db9">SmolLM2</a>、<a href="https://huggingface.co/HuggingFaceTB/SmolLM3-3B">SmolLM3</a></td><td>135M, 360M, 1.7B, 3B</td></tr>
+                            <tr><td>MoE</td><td><a href="https://huggingface.co/collections/Qwen/qwen3-67dd247413f0e2e4f653967f">Qwen3 MoE</a></td><td>30B-A3B, 235B-A122B</td></tr>
+                            <tr><td>MoE</td><td><a href="https://huggingface.co/collections/openai/gpt-oss-68911959590a1634ba11c7a4">gpt-oss</a></td><td>21B-A3B, 117B-A5B</td></tr>
+                            <tr><td>MoE</td><td><a href="https://huggingface.co/moonshotai/Moonlight-16B-A3B-Instruct">Kimi Moonlight</a></td><td>16B-A3B</td></tr>
+                            <tr><td>MoE</td><td><a href="https://huggingface.co/collections/moonshotai/kimi-k2-6871243b990f2af5ba60617d">Kimi K2</a></td><td>1T-A32B</td></tr>
+                            <tr><td>MoE</td><td><a href="https://huggingface.co/deepseek-ai/DeepSeek-V3">DeepSeek-V3</a></td><td>671B-A37B</td></tr>
+                            <tr><td>混合</td><td><a href="https://huggingface.co/Zyphra/models?search=zamba2">Zamba2</a></td><td>1.2B, 2.7B, 7B</td></tr>
+                            <tr><td>混合</td><td><a href="https://huggingface.co/collections/tiiuae/falcon-h1-6819f2795bc406da60fab8df">Falcon-H1</a></td><td>0.5B, 1.5B, 3B, 7B, 34B</td></tr>
+                            <tr><td>MoE + 混合</td><td><a href="https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Instruct">Qwen3-Next</a></td><td>80B-A3B</td></tr>
+                            <tr><td>MoE + 混合</td><td><a href="https://huggingface.co/MiniMaxAI/MiniMax-Text-01">MiniMax-01</a></td><td>456B-A46B</td></tr>
+                            <tr><td>MoE + 混合</td><td><a href="https://huggingface.co/XiaomiMiMo/MiMo-V2-Flash">MiMo-V2-Flash</a></td><td>309B-A15B</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>找到你的架构类型，挑一个参数量接近目标的基线。不用想太多，起步架构并非一成不变。下一节会讲怎么从基线走到最终最适合你的架构。</p>
+
+                <h4>修改基线：去风险的纪律</h4>
+                <p>现在你有了一个能跑、且贴合场景的基线。到此为止也行，直接拿去训，只要数据配比不错，大概率能得到一个像样的模型，很多成功项目就是这么做的。但基线不是为你的特定约束优化的，它是为构建者的场景和部署目标设计的。所以多半存在一些值得做的改动，让它更贴合你的目标。然而每次架构改动都带风险：可能提升表现，可能拖垮，也可能什么都没做却白白烧掉消融算力。</p>
+                <p>让你不跑偏的纪律叫<i>去风险</i>：除非测过确实有帮助，否则不改任何东西。</p>
+                <div class="note">
+                    <p><b>📍 什么算「已去风险」？</b>当测试表明某项改动要么提升了目标能力上的表现，要么带来了实质收益（推理更快、显存更省、稳定性更好），且没有把表现拖到你可接受范围之外，就算完成去风险。</p>
+                </div>
+                <p>棘手的地方在于，基线和训练配置里能改的组件很多：注意力机制、位置编码、激活函数、优化器、训练超参数、归一化方案、模型布局等等。每一个都是一个潜在实验，而这些组件之间常常以非线性方式相互作用。你既没有时间也没有算力去测遍一切，或穷尽所有交互。</p>
+                <p>所以，先拿有希望的改动对着当前基线测。有效就把它合入、形成新基线，再对着新基线测下一个改动。算力允许的话，也可以逐项单独测试并做留一法分析。别掉进对每个超参数做穷举网格搜索、或者把新出的架构变体全都试一遍的陷阱。这套方法的实例可以看 ScaleRL 论文。</p>
+                <div class="note">
+                    <p><b>🎯 有策略地做实验。</b>会跑实验不够，还得知道哪些实验值得跑。测任何改动前先问两句：它对我的具体场景有帮助吗？它能优化我的训练吗？两个问题都不沾边的，跳过。</p>
+                </div>
+                <p>现在你已经知道如何通过战略规划识别值得试的方向，接下来进入实证验证。后几节会讲怎么实际检验这些改动，包括如何搭可靠的实验、如何解读结果、如何避开常见陷阱。再往后的章节，会用具体例子走一遍架构、数据、基础设施和训练决策的测试过程。</p>
+
+                <h3 id="training-framework">挑选训练框架</h3>
+                <p>要做的第一个决定，是用哪个框架训练模型，以及顺带用它跑完所有消融。</p>
+                <div class="note">
+                    <p>别逞英雄，在消融和最终训练之间换框架，那条路通向痛苦。</p>
+                </div>
+                <p>这个选择要平衡三点：</p>
+                <ol>
+                    <li>框架必须支持目标架构，或者能让我们轻松扩展它。</li>
+                    <li>它要稳定、生产可用，不能训练到一半莫名其妙崩掉。</li>
+                    <li>吞吐量要强，才能快速迭代、把算力预算用足。</li>
+                </ol>
+                <p>实践里这些要求可能互相拉扯，形成取舍。看看可选方案：</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>框架</th><th>特性</th><th>实战验证</th><th>优化程度</th><th>代码行数（核心 / 总计）</th><th>扩展性与调试</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Megatron-LM</td><td>✅ 丰富</td><td>✅ Kimi K2、Nemotron</td><td>✅ 3D 并行的开创者</td><td>93k / 269k</td><td>⚠️ 新手较难</td></tr>
+                            <tr><td>DeepSpeed</td><td>✅ 丰富</td><td>✅ BLOOM、GLM</td><td>✅ ZeRO 与 3D 并行的开创者</td><td>94k / 194k</td><td>⚠️ 新手较难</td></tr>
+                            <tr><td>TorchTitan</td><td>⚡ 特性仍在增长</td><td>⚠️ 较新，但由 PyTorch 团队验证</td><td>⚡ 针对稠密模型优化，MoE 改进进行中</td><td>7k / 9k</td><td>⚡ 中等，需要并行知识</td></tr>
+                            <tr><td>Nanotron</td><td>🎯 精简，专为 HF 预训练定制</td><td>✅ 是（StarCoder、SmolLM）</td><td>✅ 已优化（UltraScale Playbook）</td><td>15k / 66k</td><td>⚡ 中等，需要并行知识</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>这张表概括了主流框架的关键取舍。前三个框架的代码行数来自 TorchTitan 技术报告。逐个展开说：</p>
+                <ul>
+                    <li>NVIDIA 的 <a href="https://github.com/NVIDIA/Megatron-LM">Megatron-LM</a> 已经存在多年，久经实战。Kimi 的 K2 就是靠它训出来的，吞吐量扎实，生产所需的大部分特性都具备。但成熟带来复杂度：代码库对新手来说不好读、也不好改。</li>
+                    <li><a href="https://github.com/deepspeedai/DeepSpeed">DeepSpeed</a> 属于同一类。它是 ZeRO 优化的开创者，支撑过 BLOOM 和 GLM。和 Megatron-LM 一样久经实战且深度优化，也同样复杂。19.4 万行的总代码量在起步时颇有压迫感，尤其要实现自定义特性或调试意外行为的时候。</li>
+                    <li>另一边，PyTorch 新近的 <a href="https://github.com/pytorch/torchtitan">TorchTitan</a> 轻得多，代码库紧凑且模块化，读起来简单。它具备预训练所需的核心特性，很适合快速实验。不过因为较新，实战检验没那么充分，活跃开发中也仍可能有点不稳定。</li>
+                    <li><a href="https://github.com/huggingface/nanotron">Nanotron</a> 是我们从零搭的框架，这带来了完全的灵活性和对大规模预训练的深入理解，这些洞察后来长成了 <a href="https://huggingface.co/spaces/nanotron/ultrascale-playbook">Ultra-Scale Playbook</a>。开源之后我们也收到了社区有价值的反馈，但多数情况下还是得自己先把特性跑通验证。它现在支持训练所需的全部生产特性，MoE 支持等领域仍在补齐。</li>
+                </ul>
+                <p>从零自研对我们是合理的，但它要求团队在专业能力和时间上重投入，用来调试问题和补齐缺失特性。一个很好的替代方案是 fork 现有框架再按需求增强，比如 Thinking Machines Lab 的内部预训练库就是 <a href="https://x.com/cHHillee/status/1949470943291805832">TorchTitan 的一个 fork</a>。</p>
+                <p>最终选哪个，取决于团队专长、目标特性，以及你愿意在自研上投多少时间，还是直接用最生产就绪的方案。如果多个框架都满足需求，就在自己的硬件上比一比吞吐量。做快速实验和跑速度测试时，代码库更简单的往往胜出。</p>
+
+                <h3 id="ablation-setup">搭建消融实验</h3>
+                <p>框架定了，接着设计消融配置。实验要快到能迅速迭代，又要大到结果有信号、能迁移到最终模型。</p>
+
+                <h4>建立消融框架</h4>
+                <p>消融的目标是在小规模上跑实验，拿到能放心外推到最终生产训练的结果。</p>
+                <p>主要有两种做法。一是保持目标模型规模，少训一些 tokens。SmolLM3 的消融训的是完整 3B 模型，但只用了 100B tokens，而不是最终的 11T。二是目标模型太大时，训一个更小的代理模型。比如 Kimi 研发 1T 参数、32B 激活参数的 K2 时，所有消融都用全尺寸会贵到无法承受，于是部分消融放在 3B MoE、0.5B 激活参数上做。</p>
+                <p>一个关键问题是：小规模上的结论真的能迁移吗？我们的经验是，如果某改动在小规模上伤害表现，可以放心地在大规模上排除它。但如果它在小规模上有效，你得确认已经训了足够多的 tokens，才能以较高把握断定结论能外推到更大尺度。训得越久、消融模型越接近最终模型越好。</p>
+                <p>我们决定所有消融都用一个原版 vanilla transformer 作基线。主配置是遵循 <a href="https://huggingface.co/meta-llama/Llama-3.2-1B">Llama 3.2 1B</a> 架构的 1B transformer，训练 45B tokens。用<a href="https://huggingface.co/datasets/HuggingFaceTB/training-guide-nanotron-configs/blob/main/baseline_config_1B.yaml">这份 Nanotron 配置</a>，在 8 张 H100 的单节点上大约一天半训完（每 GPU 每秒 42k tokens）。</p>
+                <div class="note">
+                    <p>我们训 45B tokens 是为了拿到稳定信号，尽管对这个规模来说约 35B 才是 <a href="https://arxiv.org/abs/2203.15556">Chinchilla 最优</a>。</p>
+                </div>
+                <p>基线 1B 配置用结构化的 YAML 记录了全部关键训练细节，主要段落如下：</p>
+                <pre><code>## 数据集与混合权重
+data_stages:
+- data:
+    dataset:
+      dataset_folder:
+      - fineweb-edu
+      - stack-edu-python
+      - finemath-3plus
+      dataset_weights:
+      - 0.7
+      - 0.2
+      - 0.1
+
+## 模型架构，Llama 3.2 1B 配置
+model:
+  model_config:
+    hidden_size: 2048
+    num_hidden_layers: 16
+    num_attention_heads: 32
+    num_key_value_heads: 8
+    intermediate_size: 8192
+    max_position_embeddings: 4096
+    rope_theta: 50000.0
+    tie_word_embeddings: true
+
+## 训练超参数，AdamW 配余弦调度
+optimizer:
+  clip_grad: 1.0
+  learning_rate_scheduler:
+    learning_rate: 0.0005
+    lr_decay_starting_step: 2000
+    lr_decay_steps: 18000
+    lr_decay_style: cosine
+    lr_warmup_steps: 2000
+    lr_warmup_style: linear
+    min_decay_lr: 5.0e-05
+  optimizer_factory:
+    adam_beta1: 0.9
+    adam_beta2: 0.95
+    adam_eps: 1.0e-08
+    name: adamW
+
+## 并行策略，单节点
+parallelism:
+  dp: 8  # 8 张 GPU 数据并行
+  tp: 1  # 1B 规模不需要张量并行或流水并行
+  pp: 1
+
+## 分词器
+tokenizer:
+  tokenizer_max_length: 4096
+  tokenizer_name_or_path: HuggingFaceTB/SmolLM3-3B
+
+## 批大小、序列长度与总计 30B tokens 的训练量
+tokens:
+  batch_accumulation_per_replica: 16
+  micro_batch_size: 3 # GBS（全局批大小）= dp * batch_acc * MBS * sequence = 1.5M tokens
+  sequence_length: 4096
+  train_steps: 20000 # GBS * 20000 = 30B</code></pre>
+                <p>做消融时，我们按测试对象只改对应段落，其余保持不变：架构选择改 <code>model</code> 段，优化器与训练超参数改 <code>optimizer</code> 段，数据整理改 <code>data_stages</code> 段。</p>
+                <div class="note">
+                    <p><b>☝️ 一次只改一件事。</b>每次消融只改一个变量，其他全部保持不变。同时改了多处而表现提升，你不会知道是哪一处起了作用。逐项测试改动，再把有效的组合起来重新评估。</p>
+                </div>
+                <p>跑消融时，有些架构改动会显著改变参数量。比如从绑定词嵌入改为不绑定，嵌入参数直接翻倍。用分组查询注意力或多查询注意力替代多头注意力，注意力参数会大幅减少（这些后面都会讲）。为了公平比较，需要跟踪参数量，偶尔调整别的超参数（比如 hidden size 或层数）把模型规模拉回大致相同。下面是我们用来估算不同配置参数量的简单函数：</p>
+                <pre><code>from transformers import LlamaConfig, LlamaForCausalLM
+
+def count_parameters(
+    tie_embeddings=True,
+    num_key_value_heads=4,
+    num_attention_heads=32,
+    hidden_size=2048,
+    num_hidden_layers=16,
+    intermediate_size=8192,
+    vocab_size=128256,
+    sequence_length=4096,
+):
+    config = LlamaConfig(
+        hidden_size=hidden_size,
+        num_hidden_layers=num_hidden_layers,
+        num_attention_heads=num_attention_heads,
+        num_key_value_heads=num_key_value_heads,
+        intermediate_size=intermediate_size,
+        vocab_size=vocab_size,
+        max_position_embeddings=sequence_length,
+        tie_word_embeddings=tie_embeddings,
+    )
+    model = LlamaForCausalLM(config)
+    return f"{sum(p.numel() for p in model.parameters())/1e9:.2f}B"</code></pre>
+                <p>原文还提供了一个交互工具，用来可视化稠密 transformer 的参数分布，在做架构决策或为消融写配置时很好用。该计算器假设的是标准架构选择：门控前馈网络、标准的注意力头维度（hidden_size / num_heads）、每层两个 LayerNorm，且不计偏置项（如果存在）。</p>
+
+                <h4>理解什么奏效：评估</h4>
+                <p>消融跑起来之后，怎么判断什么有效、什么无效？</p>
+                <p>训模型的人第一反应大概是看 loss，这确实重要，你希望它平滑下降、没有剧烈尖峰或不稳定。对很多架构选择来说，loss 与下游表现相关性不错，单独看它可能就够了。但只看 loss 并不总是可靠。拿数据消融举例，在 Wikipedia 上训练会比在网页上训练得到更低的 loss（下一个 token 更好预测），但这不代表模型能力更强。类似地，如果两次实验换了分词器，loss 不能直接比，因为文本切分方式变了。有些改动只影响特定能力（推理、数学），可能被平均 loss 冲淡。最后，即使预训练 loss 已经收敛，模型在下游任务上仍可能继续提升。</p>
+                <p>要看到全貌、理解这些细微效应，需要更细粒度的评估。自然的做法是用下游评测去考知识、理解、推理，以及我们关心的其他领域。</p>
+                <p>对消融而言，聚焦那些能给出良好早期信号、且噪声小的任务很有价值。<a href="https://huggingface.co/spaces/HuggingFaceFW/blogpost-fine-tasks">FineTasks</a> 和 <a href="https://arxiv.org/pdf/2506.20920">FineWeb2</a> 用四条原则定义可靠评测任务：</p>
+                <ul>
+                    <li><b>单调性：</b>训练越久，benchmark 分数应持续提升。</li>
+                    <li><b>低噪声：</b>相同配置、不同随机种子训练，分数不应大幅波动。</li>
+                    <li><b>高于随机：</b>很多能力在训练后期才涌现，长期只有随机水平的任务对消融没用。多选题格式的 MMLU 就是例子，后文会解释。</li>
+                    <li><b>排序一致性：</b>若方法 A 在早期优于方法 B，随着训练继续，这个次序应保持稳定。</li>
+                </ul>
+                <p>任务质量还取决于任务形式（怎么向模型提问）和指标选择（怎么算答案分数）。</p>
+                <p>三种常见形式是<i>多选题格式（MCF）</i>、<i>完形填空形式（CF）</i>和<i>自由生成（FG）</i>。MCF 要求模型从提示里显式给出、以 A/B/C/D 前缀标出的选项中选一个（MMLU 就是这么做的）。CF 不把选项写进提示，而是比较各选项的似然，看哪个更可能。FG 看给定提示下贪心生成的准确率。FG 需要模型具备大量潜在知识，在完整训练之前的短程预训练消融里通常太难，用处不大。因此小规模消融我们聚焦多选题形式（MCF 或 CF）。</p>
+                <div class="note">
+                    <p><b>📍 提醒。</b>对后训练模型，FG 会成为主要形式，因为我们评的是模型能否真的生成有用回答。相关评估放在「超越基座模型：后训练」一节。</p>
+                </div>
+                <p>研究还表明模型在训练早期不擅长 MCF，因此 CF 更适合早期信号。于是小规模消融用 CF，主训练里再纳入 MCF（它在训练后期信号更好）。在 CF 这类序列似然评估里给答案打分时，我们把「正确答案经字符数归一化后对数概率最高」的题目占比作为准确率，这种归一化可以避免偏向短答案。</p>
+                <div class="note">
+                    <p>MMLU 的 MCF 何时摆脱随机水平，取决于模型规模和训练数据。OLMES 论文发现 7B transformer 在 500B tokens 之后开始出现非随机表现，我们在 SmolLM2 里发现 1.7B 模型要到 6T tokens。也有工作认为这本质上取决于预训练 loss 是否达到某个阈值。</p>
+                </div>
+                <p>我们的消融评测套件包含 <a href="https://huggingface.co/spaces/HuggingFaceFW/blogpost-fineweb-v1">FineWeb</a> 消融用过的 benchmarks，但去掉了噪声太大的 SIQA，另外加入 GSM8K、HumanEval 这类数学与代码基准，以及用于长上下文消融的 RULER。这组任务覆盖世界知识、推理和常识，格式多样，见下表。为加快评测、代价是引入一些额外噪声，每个 benchmark 只取 1000 道题（GSM8K、HumanEval、RULER 除外，这三个在 3B SmolLM3 消融里全量使用，1B 实验则省略）。如前所述，所有多选题 benchmark 都用 CF 评估。多语言消融和正式训练会加入更多考察多语言能力的基准，后面细说。评测用 <a href="https://github.com/huggingface/lighteval">LightEval</a> 跑。各基准要点如下：</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>基准</th><th>领域</th><th>任务类型</th><th>题量</th><th>考察内容</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>MMLU</td><td>知识</td><td>多选</td><td>14k</td><td>57 个学科的广泛学术知识</td></tr>
+                            <tr><td>ARC</td><td>科学与推理</td><td>多选</td><td>7k</td><td>中小学科学推理</td></tr>
+                            <tr><td>HellaSwag</td><td>常识推理</td><td>多选</td><td>10k</td><td>日常情境的常识推理（叙事续写）</td></tr>
+                            <tr><td>WinoGrande</td><td>常识推理</td><td>二选一</td><td>1.7k</td><td>需要世界知识的代词消解</td></tr>
+                            <tr><td>CommonSenseQA</td><td>常识推理</td><td>多选</td><td>1.1k</td><td>日常概念的常识推理</td></tr>
+                            <tr><td>OpenBookQA</td><td>科学</td><td>多选</td><td>500</td><td>基础科学事实与推理</td></tr>
+                            <tr><td>PIQA</td><td>物理常识</td><td>二选一</td><td>1.8k</td><td>日常物体的物理常识</td></tr>
+                            <tr><td>GSM8K</td><td>数学</td><td>自由生成</td><td>1.3k</td><td>小学数学应用题</td></tr>
+                            <tr><td>HumanEval</td><td>代码</td><td>自由生成</td><td>164</td><td>根据 docstring 合成 Python 函数</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>原文还提供了<a href="https://huggingface.co/datasets/HuggingFaceTB/llm-benchmarks-viewer/viewer">可交互的样例浏览器</a>，可以逐题看每个 benchmark 到底在考什么。注意 MMLU 和 ARC 用多选考事实知识，GSM8K 要算出数学题的数值答案，HumanEval 要生成完整 Python 代码。这种多样性保证了消融过程中测的是模型能力的不同侧面。</p>
+                <p><b>消融该用哪种数据配比？</b></p>
+                <p>对<i>架构消融</i>，我们用固定的高质量数据混合，让它在广泛任务上尽早给出信号：英文用 <a href="https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu">FineWeb-Edu</a>、数学用 <a href="https://huggingface.co/datasets/HuggingFaceTB/finemath">FineMath</a>、代码用 <a href="https://huggingface.co/datasets/HuggingFaceTB/stack-edu">Stack-Edu-Python</a>。架构方面的结论应当能较好地外推到其他数据集和领域（包括多语言数据），所以数据混合可以保持简单。</p>
+                <p>对<i>数据消融</i>则相反：固定架构，系统地改变数据配比，看不同数据源怎么影响模型表现。</p>
+                <div class="note">
+                    <p>有时候评测差异很小。算力够的话，值得用不同种子重跑同一组消融，看看结果波动有多大。</p>
+                </div>
+                <p>一套扎实的消融配置，价值不只是帮你造出好模型。主训练出问题时（无论准备多充分，总会出），你希望对自己做过的每个决定都有把握，并能迅速定位哪些组件没被测过。这份准备省下的是调试时间，保住的是以后的精神状态。</p>
+
+                <h4>估算消融成本</h4>
+                <p>消融很好，但要吃 GPU 时间，值得搞清楚这些实验的代价。下表是 SmolLM3 预训练的完整算力拆分：主训练（含偶发停机）、训练前与训练中的消融，以及一次意外扩展问题导致的重启和调试所花的算力（后文详述）。</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>阶段</th><th>GPU 数</th><th>天数</th><th>GPU 小时</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>主预训练</td><td>384</td><td>30</td><td>276,480</td></tr>
+                            <tr><td>消融（预训练）</td><td>192</td><td>15</td><td>69,120</td></tr>
+                            <tr><td>消融（中期训练）</td><td>192</td><td>10</td><td>46,080</td></tr>
+                            <tr><td>训练重启 / 调试</td><td>384 / 192</td><td>3 / 4</td><td>46,080</td></tr>
+                            <tr><td><b>合计</b></td><td>-</td><td>-</td><td><b>437,760</b></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="note">
+                    <p>我们估计评测成本略低于 1 万 GPU 小时。完整评测套件（英文、多语言、数学与代码）每 GPU 约 1.5 小时，整个 11T tokens 训练期间每 10B tokens 评一次，此外还有大量消融。长上下文评测尤其贵，一次在 8 张 GPU 上约 1 小时。</p>
+                </div>
+                <p>数字揭示了一个重要事实：消融与调试合计 161,280 GPU 小时，<b>超过主训练成本（276,480 GPU 小时）的一半</b>。SmolLM3 研发期间我们跑了 100 多次消融，其中 20 天用于预训练消融、10 天用于中期训练消融、7 天用于从那次意外训练问题中恢复。</p>
+                <p>这说明为什么消融成本必须计入算力预算：按「训练成本 + 消融 + 意外缓冲」来规划。如果你的目标是 SOTA 表现、要实现新的架构改动、或者手上还没有验证过的配方，消融就会成为一笔可观的开销，而不是几个小实验。</p>
+                <div class="note">
+                    <p><a href="https://huggingface.co/deepseek-ai/DeepSeek-V3">DeepSeek-V3</a> 发布时，外界盯着它 560 万美元的训练成本数字不放（见 <a href="https://www.forbes.com/sites/markminevich/2025/02/06/the-6-million-ai-bombshell-how-deepseek-shook-wall-street-and-ai-leadership/">Forbes 报道</a>），很多人把这个数字当成全部研发开销。实际上它只反映最后一次训练运行，更大且通常看不见的支出在研究本身：导向最终配方的消融、失败运行和调试。以该模型的规模和新颖性，研究成本必然更高。</p>
+                </div>
+
+                <h3 id="rules-of-engagement">实验守则</h3>
+                <blockquote><p>一句话：多疑一点。</p></blockquote>
+                <ul>
+                    <li><b>验证评测套件。</b>训练任何模型之前，先确认你的评测套件能复现将要对比的模型的公开结果。若有生成式基准（如 GSM8K），更要多疑，手动抽查几条样本，确认提示格式正确、后处理提取的信息无误。评测会指导每一个决定，这一步做对是项目成败的关键。</li>
+                    <li><b>任何改动都要测，再小也一样。</b>别低估一次看起来无害的库升级，或者「只改了两行」的提交。这类小改动可能引入微妙的 bug 或性能漂移，污染你的结果。你需要在自己关心的场景上有强测试套件的库，用来防回归。有时候升级到最新版反而能解决 bug，Elana Simon 的<a href="https://elanapearl.github.io/blog/2025/the-bug-that-taught-me-pytorch/?t=1">博客文章</a>就是一个漂亮的侦探式调试案例。</li>
+                    <li><b>一次只改一件事。</b>实验之间保持其余条件完全一致。有些改动会以意想不到的方式相互作用，所以先评估每个改动的单独贡献，再组合起来看整体影响。</li>
+                    <li><b>训够 tokens，评测也要够。</b>前面提过，评测套件要有足够覆盖，训练要够久才能拿到可靠信号。这里偷工减料，结果就是噪声和错误决定。</li>
+                </ul>
+                <p>守这些规矩可能显得过分谨慎，但另一个选择是花好几天去调试一次神秘的性能下跌，最后发现是几天前一个不相干的依赖更新造成的。黄金原则：一旦有了好配置，<i>任何改动都不该未经测试就上线</i>。</p>
+
+                <h2 id="next-chapter">设计模型架构</h2>
                 <div class="note">
                     <p>本章及之后章节正在翻译中。当前可先阅读<a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">英文原文</a>，或在上方章节地图查看后续板块的翻译进度。</p>
                 </div>
