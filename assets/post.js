@@ -35,8 +35,8 @@
             timeSlot.textContent = minutes + ' min read';
         }
 
-        // Long articles can opt into the same nested, scroll-driven TOC as the original.
-        const autoCollapse = body.hasAttribute('data-toc-auto-collapse');
+        // Nested, scroll-driven TOC is the default. Add data-toc-flat to .post-body for a flat list.
+        const autoCollapse = !body.hasAttribute('data-toc-flat');
         const headings = Array.from(body.querySelectorAll(autoCollapse ? 'h2, h3, h4' : 'h2, h3'));
         const desktopTOC = window.matchMedia('(min-width: 1100px)');
         const tocTrees = [];
