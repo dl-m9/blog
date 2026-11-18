@@ -149,12 +149,12 @@
         }
         update();
 
-        // Previous and next posts, from posts.json. Only posts hosted on this site are linked.
+        // Previous and next posts, from posts.json. Only posts hosted in this blog are linked, not homepage pages (../).
         const nav = document.querySelector('.post-nav');
         const base = nav && nav.dataset.base;
         if (nav && base) {
             fetch(base + 'posts.json').then(function (r) { return r.json(); }).then(function (posts) {
-                const local = posts.filter(function (p) { return !/^https?:/.test(p.link); });
+                const local = posts.filter(function (p) { return !/^(https?:|\.\.\/)/.test(p.link); });
                 const here = new URL('.', window.location.href).pathname;
                 const index = local.findIndex(function (p) {
                     return new URL(base + p.link, window.location.href).pathname === here;
